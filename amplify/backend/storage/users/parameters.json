@@ -1,0 +1,5 @@
+{
+    "tableName": "users",
+    "partitionKeyName": "token",
+    "partitionKeyType": "S"
+}

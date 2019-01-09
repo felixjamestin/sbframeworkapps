@@ -1,0 +1,71 @@
+{
+    "paths": [
+        {
+            "name": "/users",
+            "lambdaFunction": "sbapi",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/items",
+            "lambdaFunction": "sbapigetallitems",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/notifications",
+            "lambdaFunction": "sbapisendnotifications",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "sbapi",
+    "apiName": "secondbrainapp9c096788",
+    "functionArns": [
+        {
+            "lambdaFunction": "sbapi"
+        },
+        {
+            "lambdaFunction": "sbapigetallitems"
+        },
+        {
+            "lambdaFunction": "sbapisendnotifications"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "secondbrainapp-20181023151350-authRole",
+        "unAuthRoleName": "secondbrainapp-20181023151350-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "sbapi",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "sbapigetallitems",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "sbapisendnotifications",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "23532741"
+}
