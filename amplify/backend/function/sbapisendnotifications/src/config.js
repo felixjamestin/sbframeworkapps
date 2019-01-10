@@ -14,12 +14,6 @@ const secondbrainApps = [
       "https://api.airtable.com/v0/appfE7KsVoV5uiRhK/ramanamaharishidaily?maxRecords=1000&view=Grid%20view"
   }
   // {
-  //   key: Constants.appKeys.aed, // ADVAITA_ENGLIGH_DAILY
-  //   token: "key34bOupUaggtKkP",
-  //   uri:
-  //     "https://api.airtable.com/v0/appfE7KsVoV5uiRhK/advaitadaily?maxRecords=1000&view=Grid%20view"
-  // },
-  // {
   //   key: Constants.appKeys.ted, // TAO_ENGLIGH_DAILY
   //   token: "key34bOupUaggtKkP",
   //   uri:

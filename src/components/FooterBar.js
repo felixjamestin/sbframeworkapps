@@ -1,8 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { ShowNextButton, ShareButton } from "./Index";
+import { Constants as AppConstants } from "./common/Index";
 
-class Footer extends React.PureComponent {
+class FooterBar extends React.PureComponent {
   constructor(props) {
     super(props);
   }
@@ -11,7 +12,7 @@ class Footer extends React.PureComponent {
     Render UI
   ----------------------------------------------------*/
   render() {
-    return this.props.showFixedFooterBar ? null : (
+    return this.props.showFixedFooterBar ? (
       <View style={styles.container}>
         <ShowNextButton
           appKey={this.props.appKey}
@@ -19,7 +20,7 @@ class Footer extends React.PureComponent {
         />
         <ShareButton appKey={this.props.appKey} />
       </View>
-    );
+    ) : null;
   }
 }
 
@@ -28,12 +29,14 @@ class Footer extends React.PureComponent {
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 60,
-    paddingBottom: 150,
-    flex: 1,
+    height: 96,
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
+    borderColor: AppConstants.baseColors.whiteBorder,
+    borderTopWidth: 1,
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 42,
     paddingRight: 50
   }
@@ -42,4 +45,4 @@ const styles = StyleSheet.create({
 /*---------------------------------------------------
     Exports
 ----------------------------------------------------*/
-export { Footer };
+export { FooterBar };

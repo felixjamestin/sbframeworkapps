@@ -14,6 +14,7 @@ import { ArrayHelper } from "./src/helpers/Index";
 import { StorageService, UserService, LogService } from "./src/services/Index";
 import config from "./aws-exports";
 
+console.disableYellowBox = true;
 const secondbrainApps = require("./amplify/backend/function/sbapigetallitems/src/constants");
 
 Amplify.configure(config);

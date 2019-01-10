@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
+import { Constants as AppConstants } from "./common/Index";
 
 const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
 
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   seperator: {
-    backgroundColor: "#333",
+    backgroundColor: AppConstants.baseColors.whiteBorder,
     height: 0.5
   }
 });

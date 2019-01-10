@@ -64,9 +64,19 @@ class BodyImage extends PureComponent {
   ⭑ Helpers & Handlers
   ----------------------------------------------------*/
   getItemStyles() {
-    const style = this.props.doesDescriptionExist
-      ? styles.container_excerpt_image
-      : styles.container_excerpt_image_only;
+    let style;
+    console.log(this.props.doesContentExist === true);
+
+    if (
+      this.props.doesDescriptionExist === true &&
+      this.props.doesContentExist === true
+    ) {
+      style = styles.container_excerpt_image_with_description_and_content;
+    } else if (this.props.doesDescriptionExist) {
+      style = styles.container_excerpt_image_with_description;
+    } else {
+      style = styles.container_excerpt_image_only;
+    }
 
     return style;
   }
@@ -92,8 +102,14 @@ class BodyImage extends PureComponent {
 ⭑ Styles
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
-  container_excerpt_image: {
-    marginTop: -15,
+  container_excerpt_image_with_description_and_content: {
+    paddingTop: 0,
+    paddingLeft: 17,
+    paddingRight: 17
+  },
+  container_excerpt_image_with_description: {
+    marginTop: -100,
+    paddingTop: 0,
     paddingLeft: 17,
     paddingRight: 17
   },

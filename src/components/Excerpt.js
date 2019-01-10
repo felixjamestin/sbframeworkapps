@@ -1,13 +1,21 @@
 import React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { StringHelper } from "../helpers/Index";
-import { BodyContent, BodyMetaDesc, BodyImage, Footer } from "./Index";
+import {
+  BodyContent,
+  BodyMetaDesc,
+  BodyImage,
+  Footer,
+  FooterBar
+} from "./Index";
+
+import { Constants as AppConstants } from "./common/Index";
 
 class Excerpt extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    // Bindings
+    // Bind methods
     this.renderItem = this.renderItem.bind(this);
   }
 
@@ -25,6 +33,11 @@ class Excerpt extends React.PureComponent {
           ListFooterComponent={this.renderFooter}
           keyExtractor={(item, index) => index.toString()}
         />
+        <FooterBar
+          showFixedFooterBar={AppConstants.displayOptions.showFixedFooterBar}
+          onShowNextExcerpt={this.props.onShowNextExcerpt}
+          appKey={this.props.appKey}
+        />
       </View>
     );
   }
@@ -32,6 +45,7 @@ class Excerpt extends React.PureComponent {
   renderItem({ item }) {
     const [author, body, title, uri] = this.getItemDetails(item);
     const doesDescriptionExist = author !== "-" || title !== "-";
+    const doesContentExist = body !== "-" && body !== "";
 
     return (
       <View>
@@ -40,6 +54,7 @@ class Excerpt extends React.PureComponent {
             title={title}
             author={author}
             doesDescriptionExist={doesDescriptionExist}
+            doesContentExist={doesContentExist}
             appKey={this.props.appKey}
           />
           <BodyContent
@@ -49,14 +64,18 @@ class Excerpt extends React.PureComponent {
           />
         </View>
 
-        {this.renderBodyImage(uri, doesDescriptionExist)}
+        {this.renderBodyImage(uri, doesDescriptionExist, doesContentExist)}
       </View>
     );
   }
 
-  renderBodyImage = (uri, doesDescriptionExist) => {
+  renderBodyImage = (uri, doesDescriptionExist, doesContentExist) => {
     const image = (
-      <BodyImage uri={uri} doesDescriptionExist={doesDescriptionExist} />
+      <BodyImage
+        uri={uri}
+        doesDescriptionExist={doesDescriptionExist}
+        doesContentExist={doesContentExist}
+      />
     );
 
     return uri !== "" ? image : null;
@@ -66,6 +85,7 @@ class Excerpt extends React.PureComponent {
     const onShowNextExcerpt = this.props.onShowNextExcerpt;
     return (
       <Footer
+        showFixedFooterBar={AppConstants.displayOptions.showFixedFooterBar}
         onShowNextExcerpt={onShowNextExcerpt}
         appKey={this.props.appKey}
       />
@@ -104,8 +124,7 @@ const styles = StyleSheet.create({
   },
   container_desc: {
     paddingLeft: 42,
-    paddingRight: 48,
-    paddingTop: 80
+    paddingRight: 48
   }
 });
 

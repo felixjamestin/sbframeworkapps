@@ -13,7 +13,17 @@ class BodyContent extends PureComponent {
   ⭑ Render UI
   ----------------------------------------------------*/
   render() {
-    return <View>{this._getViewForRender()}</View>;
+    return (
+      <View
+        style={
+          Constants.displayOptions.showFixedFooterBar
+            ? styles.container_fixed_footer
+            : styles.container
+        }
+      >
+        {this._getViewForRender()}
+      </View>
+    );
   }
 
   /*--------------------------------------------------
@@ -52,13 +62,18 @@ class BodyContent extends PureComponent {
 
   _getDynamicSizeForText(text) {
     let textStyle = styles.excerpt_body_superlarge;
-
     const textLength = text.length;
+
     if (textLength > 250) {
-      textStyle = styles.excerpt_body_tiny;
-    } else if (textLength > 100) {
+      this.props.doesDescriptionExist == true
+        ? (textStyle = styles.excerpt_body_tiny)
+        : (textStyle = [
+            styles.excerpt_body_tiny,
+            styles.no_metadescription_spacer
+          ]);
+    } else if (textLength > 120) {
       textStyle = styles.excerpt_body_small;
-    } else if (textLength > 90) {
+    } else if (textLength > 100) {
       textStyle = styles.excerpt_body_medium;
     } else if (textLength > 60) {
       textStyle = styles.excerpt_body_large;
@@ -72,6 +87,15 @@ class BodyContent extends PureComponent {
 ⭑ Styles
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 0
+  },
+  container_fixed_footer: {
+    marginBottom: 100
+  },
+  no_metadescription_spacer: {
+    marginTop: -130
+  },
   excerpt_body_tiny: {
     color: Constants.baseColors.white,
     marginBottom: 0,
@@ -79,8 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 27,
     letterSpacing: 0.2,
-    opacity: 1,
-    marginTop: -130
+    opacity: 1
   },
   excerpt_body_small: {
     color: Constants.baseColors.white,

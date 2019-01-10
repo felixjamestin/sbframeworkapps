@@ -19,8 +19,18 @@ class BodyMetaDesc extends PureComponent {
       this.props.appKey
     );
 
+    const doesMetaDescriptionExist =
+      this.props.doesContentExist === true ||
+      this.props.doesDescriptionExist === true
+        ? true
+        : false;
+
     return (
-      <View>
+      <View
+        style={
+          doesMetaDescriptionExist ? styles.container : styles.container_empty
+        }
+      >
         <Text style={itemStyle.title}>{this.props.title}</Text>
         <Text style={itemStyle.author}>{this.props.author}</Text>
         <View style={itemStyle.redbar} />
@@ -86,6 +96,12 @@ class BodyMetaDesc extends PureComponent {
     Styles 
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 80
+  },
+  container_empty: {
+    paddingTop: 0
+  },
   redbar: {
     backgroundColor: Constants.baseColors.red,
     height: 2,
