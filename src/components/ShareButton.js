@@ -7,7 +7,9 @@ import {
   Image,
   Share
 } from "react-native";
-import { Constants } from "./common/Index";
+import { Constants } from "expo";
+import { Constants as AppConstants } from "./common/Index";
+import { StringHelper } from "../helpers/Index";
 import { LogService } from "../services/Index";
 
 const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
@@ -15,9 +17,6 @@ const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems
 class ShareButton extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    // Bind methods
-    this._onShare = this._onShare.bind(this);
   }
 
   /*--------------------------------------------------
@@ -45,12 +44,45 @@ class ShareButton extends React.PureComponent {
   /*--------------------------------------------------
     Helpers & Handlers
   ----------------------------------------------------*/
-  async _onShare() {
+  _onShare = async () => {
     try {
-      const result = await Share.share({
-        message:
-          "React Native | A framework for building native apps using React"
-      });
+      let item = this.props.currentItem.fields;
+      let author = StringHelper.convertToCamelCase(item.author);
+      let body = StringHelper.convertToSentenceCase(item.extract);
+      let url = item.image !== undefined ? item.image[0].url : "";
+      let message = author + ":" + "\n" + "\n" + body;
+      let title = "";
+
+      if (
+        this.props.currentItem.fields.extract === undefined ||
+        this.props.currentItem.fields.extract === "-"
+      ) {
+        message = "";
+      }
+
+      console.log(this.props.currentItem.fields.extract);
+
+      const result = await Share.share(
+        {
+          message: message,
+          title: title,
+          url: url
+        },
+        {
+          tintColor: Constants.manifest.tintColor,
+          excludedActivityTypes: [
+            "com.apple.UIKit.activity.Print",
+            "com.apple.UIKit.activity.AssignToContact",
+            "com.apple.UIKit.activity.AddToReadingList",
+            "com.apple.UIKit.activity.AirDrop",
+            "com.apple.UIKit.activity.OpenInIBooks",
+            "com.apple.UIKit.activity.MarkupAsPDF",
+            "com.apple.reminders.RemindersEditorExtension", //Reminders
+            "com.apple.mobilenotes.SharingExtension", // Notes
+            "com.apple.mobileslideshow.StreamShareService" // iCloud Photo Sharing - This also does nothing :{
+          ]
+        }
+      );
 
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -64,7 +96,7 @@ class ShareButton extends React.PureComponent {
     } catch (error) {
       LogService.log(error.message);
     }
-  }
+  };
 
   _getIconForApp(appKey) {
     let showNextIcon;
@@ -107,7 +139,7 @@ const styles = StyleSheet.create({
   share_text: {
     fontFamily: "overpass-light",
     fontSize: 15,
-    color: Constants.baseColors.white
+    color: AppConstants.baseColors.white
   }
 });
 

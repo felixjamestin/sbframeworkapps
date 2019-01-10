@@ -34,6 +34,7 @@ class Excerpt extends React.PureComponent {
           keyExtractor={(item, index) => index.toString()}
         />
         <FooterBar
+          currentItem={this.props.item}
           showFixedFooterBar={AppConstants.displayOptions.showFixedFooterBar}
           onShowNextExcerpt={this.props.onShowNextExcerpt}
           appKey={this.props.appKey}
@@ -85,6 +86,7 @@ class Excerpt extends React.PureComponent {
     const onShowNextExcerpt = this.props.onShowNextExcerpt;
     return (
       <Footer
+        currentItem={this.props.item}
         showFixedFooterBar={AppConstants.displayOptions.showFixedFooterBar}
         onShowNextExcerpt={onShowNextExcerpt}
         appKey={this.props.appKey}

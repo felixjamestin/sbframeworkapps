@@ -18,7 +18,10 @@ class FooterBar extends React.PureComponent {
           appKey={this.props.appKey}
           onShowNextExcerpt={this.props.onShowNextExcerpt}
         />
-        <ShareButton appKey={this.props.appKey} />
+        <ShareButton
+          appKey={this.props.appKey}
+          currentItem={this.props.currentItem}
+        />
       </View>
     ) : null;
   }
