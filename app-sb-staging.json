@@ -3,7 +3,7 @@
     "name": "Secondbrain Staging",
     "description": "App that resurfaces ideas – book excerpts, quotes, insights & notes",
     "icon": "./assets/sb-staging-icon.png",
-    "version": "1.0.3",
+    "version": "1.0.7",
     "slug": "secondbrain",
     "privacy": "public",
     "sdkVersion": "32.0.0",

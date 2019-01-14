@@ -57,6 +57,7 @@ app.get("/items/*", function(req, res) {
 ----------------------------------------------------*/
 async function _getEntriesFromAirtable(appKey) {
   const appDetails = _getDetailsForAppKey(appKey);
+  console.log(appDetails);
 
   const requestOptions = {
     uri: appDetails.uri,

@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Rumi Daily",
+    "description": "App that surfaces insights from the sufi mystic poet – Rumi",
+    "icon": "./assets/red-prod-icon.png",
+    "version": "1.0.0",
+    "slug": "rumidaily",
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "bundleIdentifier": "com.felixjamestin.rumidaily",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.felixjamestin.rumidaily"
+    },
+    "orientation": "portrait",
+    "splash": {
+      "image": "./assets/red-prod-splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#222222"
+    },
+    "scheme": "rumidaily",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#222222"
+    }
+  }
+}

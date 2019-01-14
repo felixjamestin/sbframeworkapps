@@ -41,6 +41,7 @@ class ShowNextButton extends React.PureComponent {
   _getIconForApp(appKey) {
     let showNextIcon;
 
+    // NOTE: Add key for new apps
     switch (appKey) {
       case secondbrainApps.appKeys.sb:
         showNextIcon = require("../../assets/sb-show-next-icon.png");
@@ -48,6 +49,14 @@ class ShowNextButton extends React.PureComponent {
 
       case secondbrainApps.appKeys.rmed:
         showNextIcon = require("../../assets/rmed-show-next-icon.png");
+        break;
+
+      case secondbrainApps.appKeys.ted:
+        showNextIcon = require("../../assets/ted-show-next-icon.png");
+        break;
+
+      case secondbrainApps.appKeys.red:
+        showNextIcon = require("../../assets/red-show-next-icon.png");
         break;
 
       default:

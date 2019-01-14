@@ -1,7 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { Constants } from "expo";
 import { ShowNextButton, ShareButton } from "./Index";
 import { Constants as AppConstants } from "./common/Index";
+import { LogService } from "../services/Index";
+import { DeviceInfoHelper } from "../helpers/Index";
 
 class FooterBar extends React.PureComponent {
   constructor(props) {
@@ -12,8 +15,10 @@ class FooterBar extends React.PureComponent {
     Render UI
   ----------------------------------------------------*/
   render() {
+    const style = this.getStyles();
+
     return this.props.showFixedFooterBar ? (
-      <View style={styles.container}>
+      <View style={style}>
         <ShowNextButton
           appKey={this.props.appKey}
           onShowNextExcerpt={this.props.onShowNextExcerpt}
@@ -25,6 +30,25 @@ class FooterBar extends React.PureComponent {
       </View>
     ) : null;
   }
+
+  /*--------------------------------------------------
+    Helpers
+  ----------------------------------------------------*/
+  getStyles() {
+    const style = DeviceInfoHelper.isDeviceScreenFullBleed()
+      ? styles.container_large
+      : styles.container_small;
+
+    console.log(Constants.platform.ios.model); //TODO: Remove logging
+    LogService.log(
+      Constants.platform.ios.model,
+      "Constants.platform.ios.model",
+      "FooBar.js",
+      LogService.loggingType.remote
+    );
+
+    return [styles.container, style];
+  }
 }
 
 /*---------------------------------------------------
@@ -32,7 +56,6 @@ class FooterBar extends React.PureComponent {
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
   container: {
-    height: 96,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -42,6 +65,13 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     paddingLeft: 42,
     paddingRight: 50
+  },
+  container_large: {
+    height: 96
+  },
+  container_small: {
+    height: 70,
+    paddingTop: 20
   }
 });
 

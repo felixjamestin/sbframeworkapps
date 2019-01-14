@@ -15,6 +15,8 @@ exports.handler = async function(event, context) {
         // 1. Get random item from airtable
         let items = await _getEntriesFromAirtable(app);
         let item = items.currentItem;
+        console.log(app);
+        console.log(items);
 
         // 2. Get push key for relevant users based on their notification time preferance
         let pushTokens = await _getPushTokens(app.key);

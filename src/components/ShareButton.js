@@ -13,6 +13,7 @@ import { StringHelper } from "../helpers/Index";
 import { LogService } from "../services/Index";
 
 const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
+const secondbrainAppsConfig = require("../../amplify/backend/function/sbapigetallitems/src/config");
 
 class ShareButton extends React.PureComponent {
   constructor(props) {
@@ -47,20 +48,9 @@ class ShareButton extends React.PureComponent {
   _onShare = async () => {
     try {
       let item = this.props.currentItem.fields;
-      let author = StringHelper.convertToCamelCase(item.author);
-      let body = StringHelper.convertToSentenceCase(item.extract);
-      let url = item.image !== undefined ? item.image[0].url : "";
-      let message = author + ":" + "\n" + "\n" + body;
       let title = "";
-
-      if (
-        this.props.currentItem.fields.extract === undefined ||
-        this.props.currentItem.fields.extract === "-"
-      ) {
-        message = "";
-      }
-
-      console.log(this.props.currentItem.fields.extract);
+      let url = item.image !== undefined ? item.image[0].url : "";
+      let message = this._getMessageForSharing(this.props.appKey, item);
 
       const result = await Share.share(
         {
@@ -98,9 +88,39 @@ class ShareButton extends React.PureComponent {
     }
   };
 
+  _getAppStoreURI(appKey) {
+    const appConfig = secondbrainAppsConfig.find(app => {
+      return app.key === appKey ? true : false;
+    });
+
+    return appConfig.appUri;
+  }
+
+  _getMessageForSharing(appKey, item) {
+    let author = StringHelper.convertToCamelCase(item.author);
+    let body = StringHelper.convertToSentenceCase(item.extract);
+    let newLine = "\n" + "\n";
+    let endLine = "\n";
+
+    let appURI = this._getAppStoreURI(this.props.appKey);
+    let hookCopy =
+      "Liked this? Download the app and get inspired with powerful, daily reminders: ";
+    let hook = appURI !== "" ? "-" + endLine + hookCopy + endLine + appURI : "";
+
+    let message;
+    if (item.extract === undefined || item.extract === "-") {
+      message = ""; // Since the content is an image
+    } else {
+      message = author + ":" + newLine + body + newLine + hook;
+    }
+
+    return message;
+  }
+
   _getIconForApp(appKey) {
     let showNextIcon;
 
+    // NOTE: Add key for new apps
     switch (appKey) {
       case secondbrainApps.appKeys.sb:
         showNextIcon = require("../../assets/sb-share-icon.png");
@@ -108,6 +128,14 @@ class ShareButton extends React.PureComponent {
 
       case secondbrainApps.appKeys.rmed:
         showNextIcon = require("../../assets/rmed-share-icon.png");
+        break;
+
+      case secondbrainApps.appKeys.ted:
+        showNextIcon = require("../../assets/ted-share-icon.png");
+        break;
+
+      case secondbrainApps.appKeys.red:
+        showNextIcon = require("../../assets/red-share-icon.png");
         break;
 
       default:

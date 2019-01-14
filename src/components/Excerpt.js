@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Animated } from "react-native";
 import { StringHelper } from "../helpers/Index";
 import {
   BodyContent,
@@ -10,6 +10,8 @@ import {
 } from "./Index";
 
 import { Constants as AppConstants } from "./common/Index";
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class Excerpt extends React.PureComponent {
   constructor(props) {
@@ -27,11 +29,14 @@ class Excerpt extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <FlatList
+        <AnimatedFlatList
           data={items}
           renderItem={this.renderItem}
           ListFooterComponent={this.renderFooter}
           keyExtractor={(item, index) => index.toString()}
+          style={{
+            opacity: this.props.fadeAnim
+          }}
         />
         <FooterBar
           currentItem={this.props.item}
@@ -44,7 +49,7 @@ class Excerpt extends React.PureComponent {
   }
 
   renderItem({ item }) {
-    const [author, body, title, uri] = this.getItemDetails(item);
+    const [author, body, title, uri] = this._getItemDetails(item);
     const doesDescriptionExist = author !== "-" || title !== "-";
     const doesContentExist = body !== "-" && body !== "";
 
@@ -97,16 +102,16 @@ class Excerpt extends React.PureComponent {
   /*--------------------------------------------------
   ⭑ Helpers & Handlers
   ----------------------------------------------------*/
-  getItemDetails(item) {
+  _getItemDetails(item) {
     const author = StringHelper.convertToCamelCase(item.fields.author);
     const body = StringHelper.convertToSentenceCase(item.fields.extract);
     const title = StringHelper.convertToCamelCase(item.fields.title);
-    const uri = this.getImageURL(item);
+    const uri = this._getImageURL(item);
 
     return [author, body, title, uri];
   }
 
-  getImageURL(item) {
+  _getImageURL(item) {
     return item.fields.image !== undefined
       ? item.fields.image[0].url !== undefined
         ? item.fields.image[0].url

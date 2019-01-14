@@ -48,13 +48,16 @@ class BodyMetaDesc extends PureComponent {
       redbar: ""
     };
 
+    // NOTE: Add key for new apps
     switch (appKey) {
       case secondbrainApps.appKeys.sb:
         this._getItemStylesForSB(author, title, itemStyle);
         break;
 
       case secondbrainApps.appKeys.rmed:
-        this._getItemStylesForRMED(itemStyle);
+      case secondbrainApps.appKeys.ted:
+      case secondbrainApps.appKeys.red:
+        this._getItemStylesForNoMetaDescription(itemStyle);
         break;
 
       default:
@@ -84,7 +87,7 @@ class BodyMetaDesc extends PureComponent {
     return itemStyle;
   }
 
-  _getItemStylesForRMED(itemStyle) {
+  _getItemStylesForNoMetaDescription(itemStyle) {
     itemStyle.title = [styles.excerpt_title_empty, styles.excerpt_empty];
     itemStyle.author = styles.excerpt_author_empty;
     itemStyle.redbar = styles.redbar_empty;
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   excerpt_empty: {
-    marginBottom: 100
+    marginBottom: 50
   }
 });
 

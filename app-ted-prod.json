@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Tao Te Ching Daily",
+    "description": "App that surfaces daily insights from the Tao Te Ching",
+    "icon": "./assets/ted-prod-icon.png",
+    "version": "1.0.0",
+    "slug": "taotechingdaily",
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "bundleIdentifier": "com.felixjamestin.taotechingdaily",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.felixjamestin.taotechingdaily"
+    },
+    "orientation": "portrait",
+    "splash": {
+      "image": "./assets/ted-prod-splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#222222"
+    },
+    "scheme": "taotechingdaily",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#222222"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Animated } from "react-native";
 import { Font, Notifications, Constants } from "expo";
 import Amplify from "aws-amplify";
 import {
@@ -10,7 +10,7 @@ import {
   AnalyticsHelper
 } from "./src/components/Index";
 import { Constants as AppConstants } from "./src/components/common/Index";
-import { ArrayHelper } from "./src/helpers/Index";
+import { ArrayHelper, AnimationHelper } from "./src/helpers/Index";
 import { StorageService, UserService, LogService } from "./src/services/Index";
 import config from "./aws-exports";
 
@@ -35,6 +35,10 @@ export default class App extends React.Component {
       isFontLoadingDone: false
     };
 
+    this.localData = {
+      fadeAnim: new Animated.Value(0)
+    };
+
     // Bindings
     this.handleShowNextExcerpt = this.handleShowNextExcerpt.bind(this);
     this.handleNotification = this.handleNotification.bind(this);
@@ -43,7 +47,6 @@ export default class App extends React.Component {
   /*--------------------------------------------------
   ⭑ Lifecycle events
   ----------------------------------------------------*/
-
   componentDidMount() {
     UserService.registerUser(this.appKey);
     Notifications.addListener(this.handleNotification);
@@ -52,6 +55,8 @@ export default class App extends React.Component {
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().appOpen);
 
     this.fetchEntries(this.appKey);
+
+    AnimationHelper._startFadeInAnimation(this.localData.fadeAnim);
   }
 
   /*--------------------------------------------------
@@ -94,6 +99,8 @@ export default class App extends React.Component {
           item={item}
           onShowNextExcerpt={this.handleShowNextExcerpt}
           appKey={this.appKey}
+          fadeAnim={this.localData.fadeAnim}
+          springAnim={this.localData.springAnim}
         />
       </View>
     );
@@ -121,6 +128,7 @@ export default class App extends React.Component {
       currentItem: item
     });
 
+    AnimationHelper._startFadeOutAndFadeInAnimation(this.localData.fadeAnim);
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().showNext);
   }
 
@@ -145,6 +153,11 @@ export default class App extends React.Component {
       case "rmed-staging":
       case "rmed-prod":
         appKey = secondbrainApps.appKeys.rmed;
+        break;
+
+      case "ted-staging":
+      case "ted-prod":
+        appKey = secondbrainApps.appKeys.ted;
         break;
 
       default:
