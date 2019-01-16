@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 100
   },
   no_metadescription_spacer: {
-    marginTop: -130
+    marginTop: -180
   },
   excerpt_body_tiny: {
     color: Constants.baseColors.white,

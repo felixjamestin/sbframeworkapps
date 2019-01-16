@@ -13,7 +13,7 @@ class AnimationHelper {
     animationDriver.setValue(0);
     Animated.timing(animationDriver, {
       toValue: 1,
-      duration: 250,
+      duration: 500,
       useNativeDriver: true
     }).start();
   }
