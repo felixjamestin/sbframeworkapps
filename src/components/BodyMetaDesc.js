@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Constants } from "./common/Constants";
-
-const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
+import { CustomizationHelper } from "../helpers/Index";
 
 class BodyMetaDesc extends PureComponent {
   constructor(props) {
@@ -14,9 +13,9 @@ class BodyMetaDesc extends PureComponent {
   ----------------------------------------------------*/
   render() {
     const itemStyle = this._getItemStyles(
+      this.props.appKey,
       this.props.author,
-      this.props.title,
-      this.props.appKey
+      this.props.title
     );
 
     const doesMetaDescriptionExist =
@@ -25,12 +24,15 @@ class BodyMetaDesc extends PureComponent {
         ? true
         : false;
 
+    const index = this.props.index + 1;
+
     return (
       <View
         style={
           doesMetaDescriptionExist ? styles.container : styles.container_empty
         }
       >
+        <Text style={itemStyle.index}>{index}</Text>
         <Text style={itemStyle.title}>{this.props.title}</Text>
         <Text style={itemStyle.author}>{this.props.author}</Text>
         <View style={itemStyle.redbar} />
@@ -41,33 +43,22 @@ class BodyMetaDesc extends PureComponent {
   /*--------------------------------------------------
       Helpers & Handlers
   ----------------------------------------------------*/
-  _getItemStyles(author, title, appKey) {
+  _getItemStyles(appKey, author, title) {
     let itemStyle = {
       author: "",
       title: "",
-      redbar: ""
+      redbar: "",
+      index: ""
     };
 
-    // NOTE: Add key for new apps
-    switch (appKey) {
-      case secondbrainApps.appKeys.sb:
-        this._getItemStylesForSB(author, title, itemStyle);
-        break;
-
-      case secondbrainApps.appKeys.rmed:
-      case secondbrainApps.appKeys.ted:
-      case secondbrainApps.appKeys.red:
-        this._getItemStylesForNoMetaDescription(itemStyle);
-        break;
-
-      default:
-        break;
-    }
+    CustomizationHelper.shouldShowMetaDescription(appKey)
+      ? this._getItemStylesForHasMetaDescription(author, title, itemStyle)
+      : this._getItemStylesForNoMetaDescription(appKey, itemStyle);
 
     return itemStyle;
   }
 
-  _getItemStylesForSB(author, title, itemStyle) {
+  _getItemStylesForHasMetaDescription(author, title, itemStyle) {
     itemStyle.title =
       title === "-" || title === ""
         ? styles.excerpt_title_empty
@@ -84,13 +75,19 @@ class BodyMetaDesc extends PureComponent {
       ? styles.redbar
       : styles.redbar_empty;
 
+    itemStyle.index = styles.excerpt_index_empty;
+
     return itemStyle;
   }
 
-  _getItemStylesForNoMetaDescription(itemStyle) {
+  _getItemStylesForNoMetaDescription(appKey, itemStyle) {
     itemStyle.title = [styles.excerpt_title_empty, styles.excerpt_empty];
     itemStyle.author = styles.excerpt_author_empty;
     itemStyle.redbar = styles.redbar_empty;
+
+    let indexColor = CustomizationHelper.getPrimaryColorForApp(appKey);
+    itemStyle.index = [styles.excerpt_index, { color: indexColor }];
+
     return itemStyle;
   }
 }
@@ -152,6 +149,19 @@ const styles = StyleSheet.create({
     color: Constants.baseColors.white,
     fontFamily: "overpass-light",
     fontSize: 15
+  },
+  excerpt_index: {
+    color: Constants.baseColors.white,
+    fontFamily: "overpass-thin",
+    fontSize: 58,
+    marginLeft: -5,
+    marginBottom: -20,
+    letterSpacing: 0
+  },
+  excerpt_index_empty: {
+    height: 0,
+    width: 0,
+    opacity: 0
   },
   excerpt_empty: {
     marginBottom: 50

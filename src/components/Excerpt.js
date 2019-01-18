@@ -42,6 +42,7 @@ class Excerpt extends React.PureComponent {
           currentItem={this.props.item}
           showFixedFooterBar={AppConstants.displayOptions.showFixedFooterBar}
           onShowNextExcerpt={this.props.onShowNextExcerpt}
+          onShowBrowseAll={this.props.onShowBrowseAll}
           appKey={this.props.appKey}
         />
       </View>
@@ -59,6 +60,7 @@ class Excerpt extends React.PureComponent {
           <BodyMetaDesc
             title={title}
             author={author}
+            index={this.props.itemIndex}
             doesDescriptionExist={doesDescriptionExist}
             doesContentExist={doesContentExist}
             appKey={this.props.appKey}

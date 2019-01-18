@@ -15,7 +15,7 @@ class Footer extends React.PureComponent {
       <View style={styles.container}>
         <ShowNextButton
           appKey={this.props.appKey}
-          onShowNextExcerpt={this.props.onShowNextExcerpt}
+          onPress={this.props.onShowNextExcerpt}
         />
         <ShareButton
           appKey={this.props.appKey}

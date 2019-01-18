@@ -9,10 +9,9 @@ import {
 } from "react-native";
 import { Constants } from "expo";
 import { Constants as AppConstants } from "./common/Index";
-import { StringHelper } from "../helpers/Index";
+import { StringHelper, CustomizationHelper } from "../helpers/Index";
 import { LogService } from "../services/Index";
 
-const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
 const secondbrainAppsConfig = require("../../amplify/backend/function/sbapigetallitems/src/config");
 
 class ShareButton extends React.PureComponent {
@@ -27,16 +26,19 @@ class ShareButton extends React.PureComponent {
     return (
       <TouchableOpacity
         onPress={this._onShare}
-        style={styles.share_container}
+        style={styles.container}
         activeOpacity={0.6}
       >
-        <View style={styles.share_subcontainer}>
+        <View style={styles.subcontainer}>
           <Image
-            source={this._getIconForApp(this.props.appKey)}
-            style={styles.share_icon}
+            source={CustomizationHelper.getIconForApp(
+              this.props.appKey,
+              CustomizationHelper.customizationElements.share
+            )}
+            style={styles.icon}
             resizeMode="contain"
           />
-          <Text style={styles.share_text}>Share</Text>
+          <Text style={styles.text}>Share</Text>
         </View>
       </TouchableOpacity>
     );
@@ -116,55 +118,26 @@ class ShareButton extends React.PureComponent {
 
     return message;
   }
-
-  _getIconForApp(appKey) {
-    let showNextIcon;
-
-    // NOTE: Add key for new apps
-    switch (appKey) {
-      case secondbrainApps.appKeys.sb:
-        showNextIcon = require("../../assets/sb-share-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.rmed:
-        showNextIcon = require("../../assets/rmed-share-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.ted:
-        showNextIcon = require("../../assets/ted-share-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.red:
-        showNextIcon = require("../../assets/red-share-icon.png");
-        break;
-
-      default:
-        showNextIcon = "";
-        break;
-    }
-
-    return showNextIcon;
-  }
 }
 
 /*---------------------------------------------------
     Styles
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
-  share_container: {
+  container: {
     height: 50
   },
-  share_subcontainer: {
+  subcontainer: {
     flexDirection: "row"
   },
-  share_icon: {
+  icon: {
     width: 13,
     height: 13,
     marginRight: 3,
     top: 3,
     left: -2
   },
-  share_text: {
+  text: {
     fontFamily: "overpass-light",
     fontSize: 15,
     color: AppConstants.baseColors.white

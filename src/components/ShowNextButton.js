@@ -1,8 +1,7 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { Constants } from "./common/Index";
-
-const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
+import { CustomizationHelper } from "../helpers/Index";
 
 class ShowNextButton extends React.PureComponent {
   constructor(props) {
@@ -15,17 +14,20 @@ class ShowNextButton extends React.PureComponent {
   render() {
     return (
       <TouchableOpacity
-        onPress={this._onShowNext}
-        style={styles.show_next_container}
+        onPress={this._onPress}
+        style={styles.container}
         activeOpacity={0.6}
       >
-        <View style={styles.show_next_subcontainer}>
+        <View style={styles.subcontainer}>
           <Image
-            source={this._getIconForApp(this.props.appKey)}
-            style={styles.show_next_icon}
+            source={CustomizationHelper.getIconForApp(
+              this.props.appKey,
+              CustomizationHelper.customizationElements.showNext
+            )}
+            style={styles.icon}
             resizeMode="contain"
           />
-          <Text style={styles.show_next_text}>Show next</Text>
+          <Text style={styles.text}>Show next</Text>
         </View>
       </TouchableOpacity>
     );
@@ -34,60 +36,31 @@ class ShowNextButton extends React.PureComponent {
   /*--------------------------------------------------
     Helpers & Handlers
   ----------------------------------------------------*/
-  _onShowNext = () => {
-    this.props.onShowNextExcerpt();
+  _onPress = () => {
+    this.props.onPress();
   };
-
-  _getIconForApp(appKey) {
-    let showNextIcon;
-
-    // NOTE: Add key for new apps
-    switch (appKey) {
-      case secondbrainApps.appKeys.sb:
-        showNextIcon = require("../../assets/sb-show-next-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.rmed:
-        showNextIcon = require("../../assets/rmed-show-next-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.ted:
-        showNextIcon = require("../../assets/ted-show-next-icon.png");
-        break;
-
-      case secondbrainApps.appKeys.red:
-        showNextIcon = require("../../assets/red-show-next-icon.png");
-        break;
-
-      default:
-        showNextIcon = "";
-        break;
-    }
-
-    return showNextIcon;
-  }
 }
 
 /*---------------------------------------------------
     Styles
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
-  show_next_container: {
+  container: {
     height: 50,
     width: 100,
-    marginRight: 20
+    marginRight: 22
   },
-  show_next_subcontainer: {
+  subcontainer: {
     flexDirection: "row"
   },
-  show_next_icon: {
+  icon: {
     width: 13,
     height: 13,
     marginRight: 3,
     top: 3,
     left: -2
   },
-  show_next_text: {
+  text: {
     fontFamily: "overpass-light",
     fontSize: 15,
     color: Constants.baseColors.white

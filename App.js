@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Animated } from "react-native";
+import { StyleSheet, View, Animated, Text } from "react-native";
 import { Font, Notifications, Constants } from "expo";
 import Amplify from "aws-amplify";
 import {
@@ -7,6 +7,8 @@ import {
   Excerpt,
   BlankState,
   LoadingState,
+  BrowseModal,
+  RatingModal,
   AnalyticsHelper
 } from "./src/components/Index";
 import { Constants as AppConstants } from "./src/components/common/Index";
@@ -32,7 +34,8 @@ export default class App extends React.Component {
       dataSource: [],
       currentItem: {},
       isDataLoadingDone: false,
-      isFontLoadingDone: false
+      isFontLoadingDone: false,
+      showBrowseAll: false
     };
 
     this.localData = {
@@ -41,7 +44,10 @@ export default class App extends React.Component {
 
     // Bindings
     this.handleShowNextExcerpt = this.handleShowNextExcerpt.bind(this);
+    this.handleShowBrowseAll = this.handleShowBrowseAll.bind(this);
+    this.handleHideBrowseAll = this.handleHideBrowseAll.bind(this);
     this.handleNotification = this.handleNotification.bind(this);
+    this.handleShowSelectedItem = this.handleShowSelectedItem.bind(this);
   }
 
   /*--------------------------------------------------
@@ -91,16 +97,33 @@ export default class App extends React.Component {
 
   renderWhenItemsExist() {
     const item = this.state.currentItem;
+    const itemIndex = this.state.dataSource.findIndex(element => {
+      return element.id === item.id ? true : false;
+    });
 
     return (
       <View style={styles.container}>
         <Header appKey={this.appKey} />
         <Excerpt
           item={item}
+          itemIndex={itemIndex}
           onShowNextExcerpt={this.handleShowNextExcerpt}
+          onShowBrowseAll={this.handleShowBrowseAll}
           appKey={this.appKey}
           fadeAnim={this.localData.fadeAnim}
           springAnim={this.localData.springAnim}
+        />
+        <BrowseModal
+          appKey={this.appKey}
+          items={this.state.dataSource}
+          currentItem={item}
+          isOpen={this.state.showBrowseAll}
+          onHide={this.handleHideBrowseAll}
+          onPress={this.handleShowSelectedItem}
+        />
+        <RatingModal
+          appKey={this.appKey}
+          ratingDetails={this.state.ratingDetails}
         />
       </View>
     );
@@ -130,6 +153,27 @@ export default class App extends React.Component {
 
     AnimationHelper._startFadeOutAndFadeInAnimation(this.localData.fadeAnim);
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().showNext);
+  }
+
+  handleShowSelectedItem(selectedItemID) {
+    const selectedItem = this.state.dataSource.find(item => {
+      return item.id === selectedItemID ? true : false;
+    });
+
+    this.setState({
+      currentItem: selectedItem,
+      showBrowseAll: false
+    });
+
+    AnimationHelper._startFadeOutAndFadeInAnimation(this.localData.fadeAnim);
+  }
+
+  handleShowBrowseAll() {
+    this.setState({ showBrowseAll: true });
+  }
+
+  handleHideBrowseAll() {
+    this.setState({ showBrowseAll: false });
   }
 
   getRandomItem(dataSource = this.state.dataSource) {
@@ -204,7 +248,8 @@ export default class App extends React.Component {
       "overpass-thin": require("./assets/fonts/overpass-thin.ttf"),
       "overpass-light": require("./assets/fonts/overpass-light.ttf"),
       "overpass-regular": require("./assets/fonts/overpass-regular.ttf"),
-      "overpass-semibold": require("./assets/fonts/overpass-semibold.ttf")
+      "overpass-semibold": require("./assets/fonts/overpass-semibold.ttf"),
+      "roboto-thin": require("./assets/fonts/roboto-thin.ttf")
     });
 
     this.setState({

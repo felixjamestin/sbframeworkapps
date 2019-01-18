@@ -1,9 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Constants } from "expo";
-import { ShowNextButton, ShareButton } from "./Index";
+import { ShowNextButton, ShareButton, BrowseAllButton } from "./Index";
 import { Constants as AppConstants } from "./common/Index";
-import { LogService } from "../services/Index";
 import { DeviceInfoHelper } from "../helpers/Index";
 
 class FooterBar extends React.PureComponent {
@@ -21,7 +19,11 @@ class FooterBar extends React.PureComponent {
       <View style={style}>
         <ShowNextButton
           appKey={this.props.appKey}
-          onShowNextExcerpt={this.props.onShowNextExcerpt}
+          onPress={this.props.onShowNextExcerpt}
+        />
+        <BrowseAllButton
+          appKey={this.props.appKey}
+          onPress={this.props.onShowBrowseAll}
         />
         <ShareButton
           appKey={this.props.appKey}
@@ -39,14 +41,6 @@ class FooterBar extends React.PureComponent {
       ? styles.container_large
       : styles.container_small;
 
-    console.log(Constants.platform.ios.model); //TODO: Remove logging
-    LogService.log(
-      Constants.platform.ios.model,
-      "Constants.platform.ios.model",
-      "FooBar.js",
-      LogService.loggingType.remote
-    );
-
     return [styles.container, style];
   }
 }
@@ -63,8 +57,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingTop: 0,
     paddingBottom: 0,
-    paddingLeft: 42,
-    paddingRight: 50
+    paddingLeft: 40,
+    paddingRight: 40
   },
   container_large: {
     height: 96

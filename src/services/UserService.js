@@ -30,7 +30,7 @@ class UserService {
     const timeZoneOffset = date.getTimezoneOffset() / 60;
 
     // Get app details
-    const newItem = {
+    const userDetails = {
       headers: {},
       response: true,
       queryStringParameters: {},
@@ -47,7 +47,7 @@ class UserService {
         appKey: appKey
       }
     };
-    await API.post(apiName, createPath, newItem);
+    await API.post(apiName, createPath, userDetails);
   }
 
   static async _getOSPermissionForPushNotifications() {

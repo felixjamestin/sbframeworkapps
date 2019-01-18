@@ -71,6 +71,10 @@ class StringHelper {
 
     return isTextInMarkdown;
   }
+
+  static padWithZero(number) {
+    return ("0" + number).slice(-2);
+  }
 }
 
 export { StringHelper };
