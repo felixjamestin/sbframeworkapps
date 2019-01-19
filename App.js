@@ -39,7 +39,8 @@ export default class App extends React.Component {
     };
 
     this.localData = {
-      fadeAnim: new Animated.Value(0)
+      fadeAnim: new Animated.Value(0),
+      userDetails: {}
     };
 
     // Bindings
@@ -123,7 +124,7 @@ export default class App extends React.Component {
         />
         <RatingModal
           appKey={this.appKey}
-          ratingDetails={this.state.ratingDetails}
+          userDetails={this.localData.userDetails}
         />
       </View>
     );

@@ -13,7 +13,7 @@ import { CustomizationHelper } from "../helpers/Index";
 
 var screen = Dimensions.get("window");
 
-class RatingeModal extends React.Component {
+class RatingModal extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -112,4 +112,4 @@ const styles = StyleSheet.create({
 /*---------------------------------------------------
 ⭑ Exports
 ----------------------------------------------------*/
-export { RatingeModal };
+export { RatingModal };

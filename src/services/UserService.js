@@ -12,7 +12,7 @@ class UserService {
       let token = await Notifications.getExpoPushTokenAsync();
 
       // 3. Send user details (push token, user timezone, etc) to backend
-      this._sendUserDetailsToBackend(appKey, token);
+      const userDetails = this._sendUserDetailsToBackend(appKey, token);
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +47,7 @@ class UserService {
         appKey: appKey
       }
     };
-    await API.post(apiName, createPath, userDetails);
+    return await API.post(apiName, createPath, userDetails);
   }
 
   static async _getOSPermissionForPushNotifications() {
