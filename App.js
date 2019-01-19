@@ -55,14 +55,13 @@ export default class App extends React.Component {
   ⭑ Lifecycle events
   ----------------------------------------------------*/
   componentDidMount() {
-    UserService.registerUser(this.appKey);
-    Notifications.addListener(this.handleNotification);
+    this._initializeUser();
 
+    Notifications.addListener(this.handleNotification);
     this.loadFonts();
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().appOpen);
 
     this.fetchEntries(this.appKey);
-
     AnimationHelper._startFadeInAnimation(this.localData.fadeAnim);
   }
 
@@ -133,6 +132,10 @@ export default class App extends React.Component {
   /*--------------------------------------------------
   ⭑ Helpers & Handlers
   ----------------------------------------------------*/
+  _initializeUser() {
+    UserService.registerAndGetUserDetails(this.appKey);
+  }
+
   checkIfAppLoadingInProgress() {
     const isAppLoadingInProgress =
       this.state.isDataLoadingDone === false ||

@@ -2,17 +2,18 @@ import { Permissions, Notifications, Constants } from "expo";
 import { API } from "aws-amplify";
 
 class UserService {
-  static async registerUser(appKey) {
+  static async registerAndGetUserDetails(appKey) {
     try {
-      // 1. Get OS permission for push
+      // 1. Handle setup for push notifications
       const wasPushNotificationPermissionObtained = await this._getOSPermissionForPushNotifications();
       if (!wasPushNotificationPermissionObtained) return;
-
-      // 2. Get device push token
       let token = await Notifications.getExpoPushTokenAsync();
 
+      // 2. Prepare user attributes for registration
+      const userData = this._prepareUserData(token);
+
       // 3. Send user details (push token, user timezone, etc) to backend
-      const userDetails = this._sendUserDetailsToBackend(appKey, token);
+      this._sendUserDetailsToBackend(appKey, userData);
     } catch (error) {
       console.log(error);
     }
@@ -21,13 +22,31 @@ class UserService {
   /*---------------------------------------------------
   ⭑ Private methods
   ----------------------------------------------------*/
-  static async _sendUserDetailsToBackend(appKey, token) {
-    const apiName = "sbapi";
-    const createPath = "/users";
-
+  static _prepareUserData(deviceToken) {
     // Get user's timezone
     const date = new Date();
     const timeZoneOffset = date.getTimezoneOffset() / 60;
+
+    // Get notification preferences
+    const notificationTime = 9; // Send at 9 AM
+    const notificationFrequency = 1; // Every "1" day
+
+    return {
+      deviceToken: deviceToken,
+      deviceID: Constants.deviceId,
+      deviceName: Constants.deviceName,
+      timeZoneOffset: timeZoneOffset,
+      shouldSendNotifications: true,
+      notificationTime: notificationTime,
+      notificationFrequency: notificationFrequency,
+      email: "felixjamestin@gmail.com", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
+      appType: Constants.appOwnership
+    };
+  }
+
+  static async _sendUserDetailsToBackend(appKey, userData) {
+    const apiName = "sbapi";
+    const createPath = "/users";
 
     // Get app details
     const userDetails = {
@@ -35,15 +54,15 @@ class UserService {
       response: true,
       queryStringParameters: {},
       body: {
-        token: token,
-        email: "felixjamestin@gmail.com",
-        shouldSendNotifications: true,
-        timeZoneOffset: timeZoneOffset,
-        notificationTime: 9, // Send at 9 AM
-        notificationFrequency: 1, // Every "1" day
-        deviceID: Constants.deviceId,
-        deviceName: Constants.deviceName,
-        appType: Constants.appOwnership,
+        token: userData.token,
+        email: userData.email,
+        shouldSendNotifications: userData.shouldSendNotifications,
+        timeZoneOffset: userData.timeZoneOffset,
+        notificationTime: userData.notificationTime,
+        notificationFrequency: userData.notificationFrequency,
+        deviceID: userData.deviceId,
+        deviceName: userData.deviceName,
+        appType: userData.appOwnership,
         appKey: appKey
       }
     };
