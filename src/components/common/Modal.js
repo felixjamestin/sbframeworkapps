@@ -25,25 +25,21 @@ class ModalDialog extends React.Component {
   ⭑ Render UI
   ----------------------------------------------------*/
   render() {
-    const style = {
-      backgroundColor: this.props.backgroundColor,
-      width: this.props.width
-    };
-
     return (
       <Modal
+        style={[styles.modal, this.props.style]}
+        position={this.props.position}
+        entry="bottom"
         isOpen={this.props.isOpen}
         onClosed={this.props.onClose}
         onOpened={this.props.onOpen}
-        backdropPressToClose={this.props.backdropPressToClose}
-        style={[styles.modal, style]}
         swipeToClose={this.props.swipeToClose}
-        onClosingState={this.props.onClosingState}
-        position="bottom"
-        entry="bottom"
         swipeThreshold={50}
-        backdropOpacity={0}
+        onClosingState={this.props.onClosingState}
+        backdropPressToClose={this.props.backdropPressToClose}
+        backdropOpacity={this.props.backdropOpacity}
         backdropColor={Constants.baseColors.darkGrey}
+        backdropContent={null}
         animationDuration={400}
         easing={Easing.elastic(0.8)}
       >
@@ -58,11 +54,9 @@ class ModalDialog extends React.Component {
 ----------------------------------------------------*/
 const styles = StyleSheet.create({
   modal: {
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     width: screen.width,
-    backgroundColor: Constants.baseColors.darkGrey
+    height: screen.height
   }
 });
 

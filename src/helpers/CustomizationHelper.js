@@ -92,6 +92,33 @@ class CustomizationHelper {
     }
   }
 
+  static getHeaderLogoAndStyleForApp(appKey) {
+    let headerLogo;
+    if (appKey === secondbrainApps.appKeys.sb) {
+      headerLogo = {
+        image: require("../../assets/sb-header_logo.png"),
+        style: { width: 180 }
+      };
+    } else if (appKey === secondbrainApps.appKeys.rmed) {
+      headerLogo = {
+        image: require("../../assets/rmed-header_logo.png"),
+        style: { width: 220 }
+      };
+    } else if (appKey === secondbrainApps.appKeys.ted) {
+      headerLogo = {
+        image: require("../../assets/ted-header_logo.png"),
+        style: { width: 220 }
+      };
+    } else if (appKey === secondbrainApps.appKeys.red) {
+      headerLogo = {
+        image: require("../../assets/red-header_logo.png"),
+        style: { width: 220 }
+      };
+    }
+
+    return headerLogo;
+  }
+
   static shouldShowMetaDescription(appKey) {
     let shouldShowMetaDescription;
 

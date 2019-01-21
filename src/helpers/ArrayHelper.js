@@ -1,5 +1,5 @@
 class ArrayHelper {
-  static getRandomItemFromArray(items = []) {
+  static _getRandomItemFromArray(items = []) {
     const randomIndex = Math.floor(Math.random() * items.length);
     return items[randomIndex];
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Animated, Text } from "react-native";
+import { StyleSheet, View, Animated } from "react-native";
 import { Font, Notifications, Constants } from "expo";
 import Amplify from "aws-amplify";
 import {
@@ -12,12 +12,15 @@ import {
   AnalyticsHelper
 } from "./src/components/Index";
 import { Constants as AppConstants } from "./src/components/common/Index";
-import { ArrayHelper, AnimationHelper } from "./src/helpers/Index";
+import {
+  ArrayHelper,
+  AnimationHelper,
+  ReleaseHelper
+} from "./src/helpers/Index";
 import { StorageService, UserService, LogService } from "./src/services/Index";
 import config from "./aws-exports";
 
 console.disableYellowBox = true;
-const secondbrainApps = require("./amplify/backend/function/sbapigetallitems/src/constants");
 
 Amplify.configure(config);
 
@@ -25,10 +28,13 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    // Initializations
-    this.appKey = this.getAppKeyFromExpoReleaseChannel(
-      Constants.manifest.releaseChannel
-    );
+    const channel = Constants.manifest.releaseChannel;
+    const appKey = ReleaseHelper.getAppKeyFromExpoReleaseChannel(channel);
+    this.localData = {
+      appKey: appKey,
+      fadeAnim: new Animated.Value(0),
+      userConfig: {}
+    };
 
     this.state = {
       dataSource: [],
@@ -38,17 +44,12 @@ export default class App extends React.Component {
       showBrowseAll: false
     };
 
-    this.localData = {
-      fadeAnim: new Animated.Value(0),
-      userDetails: {}
-    };
-
     // Bindings
-    this.handleShowNextExcerpt = this.handleShowNextExcerpt.bind(this);
-    this.handleShowBrowseAll = this.handleShowBrowseAll.bind(this);
-    this.handleHideBrowseAll = this.handleHideBrowseAll.bind(this);
-    this.handleNotification = this.handleNotification.bind(this);
-    this.handleShowSelectedItem = this.handleShowSelectedItem.bind(this);
+    this._handleShowNextExcerpt = this._handleShowNextExcerpt.bind(this);
+    this._handleShowBrowseAll = this._handleShowBrowseAll.bind(this);
+    this._handleHideBrowseAll = this._handleHideBrowseAll.bind(this);
+    this._handleNotification = this._handleNotification.bind(this);
+    this._handleShowSelectedItem = this._handleShowSelectedItem.bind(this);
   }
 
   /*--------------------------------------------------
@@ -56,12 +57,11 @@ export default class App extends React.Component {
   ----------------------------------------------------*/
   componentDidMount() {
     this._initializeUser();
+    this._initializeEntries(this.localData.appKey);
+    this._initializeFonts();
 
-    Notifications.addListener(this.handleNotification);
-    this.loadFonts();
+    Notifications.addListener(this._handleNotification);
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().appOpen);
-
-    this.fetchEntries(this.appKey);
     AnimationHelper._startFadeInAnimation(this.localData.fadeAnim);
   }
 
@@ -73,9 +73,9 @@ export default class App extends React.Component {
   }
 
   getViewForRender() {
-    const finalView = this.checkIfAppLoadingInProgress()
+    const finalView = this._checkIfAppLoadingInProgress()
       ? this.renderWhenLoading()
-      : this.checkIfNoEntries()
+      : this._checkIfNoEntries()
       ? this.renderWhenEmpty()
       : this.renderWhenItemsExist();
 
@@ -89,7 +89,7 @@ export default class App extends React.Component {
   renderWhenEmpty() {
     return (
       <View style={styles.container}>
-        <Header appKey={this.appKey} />
+        <Header appKey={this.localData.appKey} />
         <BlankState />
       </View>
     );
@@ -103,27 +103,27 @@ export default class App extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Header appKey={this.appKey} />
+        <Header appKey={this.localData.appKey} />
         <Excerpt
           item={item}
           itemIndex={itemIndex}
-          onShowNextExcerpt={this.handleShowNextExcerpt}
-          onShowBrowseAll={this.handleShowBrowseAll}
-          appKey={this.appKey}
+          onShowNextExcerpt={this._handleShowNextExcerpt}
+          onShowBrowseAll={this._handleShowBrowseAll}
+          appKey={this.localData.appKey}
           fadeAnim={this.localData.fadeAnim}
           springAnim={this.localData.springAnim}
         />
         <BrowseModal
-          appKey={this.appKey}
+          appKey={this.localData.appKey}
           items={this.state.dataSource}
           currentItem={item}
           isOpen={this.state.showBrowseAll}
-          onHide={this.handleHideBrowseAll}
-          onPress={this.handleShowSelectedItem}
+          onHide={this._handleHideBrowseAll}
+          onPress={this._handleShowSelectedItem}
         />
         <RatingModal
-          appKey={this.appKey}
-          userDetails={this.localData.userDetails}
+          appKey={this.localData.appKey}
+          userConfig={this.localData.userConfig}
         />
       </View>
     );
@@ -132,11 +132,12 @@ export default class App extends React.Component {
   /*--------------------------------------------------
   ⭑ Helpers & Handlers
   ----------------------------------------------------*/
-  _initializeUser() {
-    UserService.registerAndGetUserDetails(this.appKey);
+  async _initializeUser() {
+    UserService.registerUser(this.localData.appKey);
+    await this._fetchUserConfig(this.localData.appKey);
   }
 
-  checkIfAppLoadingInProgress() {
+  _checkIfAppLoadingInProgress() {
     const isAppLoadingInProgress =
       this.state.isDataLoadingDone === false ||
       this.state.isFontLoadingDone === false;
@@ -144,13 +145,13 @@ export default class App extends React.Component {
     return isAppLoadingInProgress;
   }
 
-  checkIfNoEntries() {
+  _checkIfNoEntries() {
     const isDataEmpty = !this.state.dataSource;
     return isDataEmpty;
   }
 
-  handleShowNextExcerpt() {
-    const item = this.getRandomItem();
+  _handleShowNextExcerpt() {
+    const item = this._getRandomItem();
     this.setState({
       currentItem: item
     });
@@ -159,7 +160,7 @@ export default class App extends React.Component {
     AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().showNext);
   }
 
-  handleShowSelectedItem(selectedItemID) {
+  _handleShowSelectedItem(selectedItemID) {
     const selectedItem = this.state.dataSource.find(item => {
       return item.id === selectedItemID ? true : false;
     });
@@ -172,60 +173,29 @@ export default class App extends React.Component {
     AnimationHelper._startFadeOutAndFadeInAnimation(this.localData.fadeAnim);
   }
 
-  handleShowBrowseAll() {
+  _handleShowBrowseAll() {
     this.setState({ showBrowseAll: true });
   }
 
-  handleHideBrowseAll() {
+  _handleHideBrowseAll() {
     this.setState({ showBrowseAll: false });
   }
 
-  getRandomItem(dataSource = this.state.dataSource) {
-    return ArrayHelper.getRandomItemFromArray(dataSource);
+  _getRandomItem(dataSource = this.state.dataSource) {
+    return ArrayHelper._getRandomItemFromArray(dataSource);
   }
 
-  getAppKeyFromExpoReleaseChannel(channel) {
-    const releaseChannel = channel || "default";
-
-    let appKey;
-    switch (releaseChannel) {
-      case "default":
-        appKey = secondbrainApps.appKeys.sb;
-        break;
-
-      case "sb-staging":
-      case "sb-prod":
-        appKey = secondbrainApps.appKeys.sb;
-        break;
-
-      case "rmed-staging":
-      case "rmed-prod":
-        appKey = secondbrainApps.appKeys.rmed;
-        break;
-
-      case "ted-staging":
-      case "ted-prod":
-        appKey = secondbrainApps.appKeys.ted;
-        break;
-
-      default:
-        break;
-    }
-
-    return appKey;
-  }
-
-  async handleNotification(notification) {
+  async _handleNotification(notification) {
     let entryID = notification.data.id
       ? notification.data.id
       : this.props.exp.notification
       ? this.props.exp.notification.data.id
       : "";
 
-    this.fetchEntries(this.appKey, entryID);
+    this._initializeEntries(this.localData.appKey, entryID);
   }
 
-  async fetchEntries(appKey, id = "") {
+  async _initializeEntries(appKey, id = "") {
     try {
       const items = await StorageService.fetchData(appKey, id);
 
@@ -241,13 +211,21 @@ export default class App extends React.Component {
       LogService.log(
         error.name + ": " + error.message,
         "error",
-        "fetchEntries",
+        "_fetchEntries",
         LogService.loggingType.remote
       );
     }
   }
 
-  async loadFonts() {
+  async _fetchUserConfig(appKey) {
+    try {
+      this.localData.userConfig = await StorageService.fetchConfigData(appKey);
+    } catch (error) {
+      LogService.log(error.name + ": " + error.message);
+    }
+  }
+
+  async _initializeFonts() {
     await Font.loadAsync({
       "overpass-thin": require("./assets/fonts/overpass-thin.ttf"),
       "overpass-light": require("./assets/fonts/overpass-light.ttf"),

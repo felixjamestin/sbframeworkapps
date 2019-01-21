@@ -12,6 +12,27 @@ class StorageService {
     return syncedItems;
   }
 
+  static async fetchConfigData(appKey) {
+    let localDataKey = appKey + "userConfig";
+    let userConfig = await this._getFromLocalStorage(localDataKey);
+
+    if (this._checkIfValid(userConfig) === false) {
+      userConfig = {
+        ratingCompleted: false,
+        ratingShownCount: 0,
+        appFirstOpened: Date.now()
+      };
+      this._setLocalStorage(localDataKey, userConfig);
+    }
+
+    return userConfig;
+  }
+
+  static async storeConfigData(appKey, userConfig) {
+    let localDataKey = appKey + "userConfig";
+    this._setLocalStorage(localDataKey, userConfig);
+  }
+
   /*--------------------------------------------------
     ⭑ Private methods
   ----------------------------------------------------*/
@@ -79,8 +100,8 @@ class StorageService {
     let localDataKey = appKey + "items";
     let lastSyncedAtKey = appKey + "lastSyncedAt";
 
-    AsyncStorage.setItem(localDataKey, JSON.stringify(items));
-    AsyncStorage.setItem(lastSyncedAtKey, JSON.stringify(Date.now()));
+    this._setLocalStorage(localDataKey, items);
+    this._setLocalStorage(lastSyncedAtKey, Date.now());
   }
 
   static _getFetchURL(appKey, entryID) {
@@ -99,6 +120,10 @@ class StorageService {
     return JSON.parse(result);
   }
 
+  static async _setLocalStorage(key, items) {
+    AsyncStorage.setItem(key, JSON.stringify(items));
+  }
+
   static _checkIfItemsAreValid(items) {
     let isValid =
       items !== null && items !== undefined
@@ -108,6 +133,10 @@ class StorageService {
         : false;
 
     return isValid;
+  }
+
+  static _checkIfValid(datum) {
+    return datum !== null && datum !== undefined ? true : false;
   }
 
   static _getCurrentItem(items, entryID) {

@@ -2,7 +2,7 @@ import { Permissions, Notifications, Constants } from "expo";
 import { API } from "aws-amplify";
 
 class UserService {
-  static async registerAndGetUserDetails(appKey) {
+  static async registerUser(appKey) {
     try {
       // 1. Handle setup for push notifications
       const wasPushNotificationPermissionObtained = await this._getOSPermissionForPushNotifications();

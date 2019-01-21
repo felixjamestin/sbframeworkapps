@@ -10,11 +10,7 @@ import {
 } from "react-native";
 
 import { Constants, ModalDialog } from "./common/Index";
-import {
-  CustomizationHelper,
-  StringHelper,
-  DeviceInfoHelper
-} from "../helpers/Index";
+import { CustomizationHelper, DeviceInfoHelper } from "../helpers/Index";
 
 var screen = Dimensions.get("window");
 
@@ -29,14 +25,20 @@ class BrowseModal extends React.Component {
   render() {
     return (
       <ModalDialog
+        style={{
+          width: screen.width,
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(34, 34, 34, .93)"
+        }}
         isOpen={this.props.isOpen}
-        backgroundColor="rgba(34, 34, 34, .95)"
-        width={screen.width}
         onOpen={this._onOpen}
         onClose={this._onClose}
         onClosingState={this._onClosingState}
         backdropPressToClose
         swipeToClose={false}
+        position="bottom"
       >
         <View style={styles.container}>
           {this._renderSectionLinksGrid()}
