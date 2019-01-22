@@ -2,6 +2,8 @@ import { Permissions, Notifications, Constants } from "expo";
 import { API } from "aws-amplify";
 
 class UserService {
+  static userData = {};
+
   static async registerUser(appKey) {
     try {
       // 1. Handle setup for push notifications
@@ -10,10 +12,10 @@ class UserService {
       let token = await Notifications.getExpoPushTokenAsync();
 
       // 2. Prepare user attributes for registration
-      const userData = this._prepareUserData(token);
+      this._prepareUserData(token);
 
       // 3. Send user details (push token, user timezone, etc) to backend
-      this._sendUserDetailsToBackend(appKey, userData);
+      this._sendUserDetailsToBackend(appKey, UserService.userData);
     } catch (error) {
       console.log(error);
     }
@@ -31,7 +33,7 @@ class UserService {
     const notificationTime = 9; // Send at 9 AM
     const notificationFrequency = 1; // Every "1" day
 
-    return {
+    UserService.userData = {
       deviceToken: deviceToken,
       deviceID: Constants.deviceId,
       deviceName: Constants.deviceName,
@@ -42,6 +44,8 @@ class UserService {
       email: "felixjamestin@gmail.com", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
       appType: Constants.appOwnership
     };
+
+    return UserService.userData;
   }
 
   static async _sendUserDetailsToBackend(appKey, userData) {

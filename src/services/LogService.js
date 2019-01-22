@@ -1,4 +1,4 @@
-import { CONFIG } from "../config/Index";
+import { CustomizationHelper } from "../helpers/Index";
 
 class LogService {
   static loggingType = {
@@ -7,7 +7,7 @@ class LogService {
   };
 
   static log(value, variableName, calleeName, type = this.loggingType.local) {
-    if (CONFIG.LOGGING_ENABLED === false) return;
+    if (CustomizationHelper.getConfig().loggingEnabled === false) return;
 
     switch (type) {
       case this.loggingType.local:

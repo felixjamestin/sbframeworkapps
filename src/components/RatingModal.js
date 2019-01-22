@@ -10,7 +10,7 @@ import {
 import { StoreReview } from "expo";
 import { Constants, ModalDialog } from "./common/Index";
 import { StorageService } from "../services/StorageService";
-import { CustomizationHelper } from "../helpers/Index";
+import { CustomizationHelper, AnalyticsHelper } from "../helpers/Index";
 
 const pages = {
   checkIfLikingApp: 1,
@@ -189,6 +189,11 @@ class RatingModal extends React.Component {
     this.setState({
       isOpen: true
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenAskIfLiked
+    );
   }
 
   _onBack = () => {
@@ -201,18 +206,33 @@ class RatingModal extends React.Component {
     this.setState({
       currentPage: pages.askForFeedback
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenAskIfLikedNo
+    );
   };
 
   _onPressProceed = () => {
     this.setState({
       currentPage: pages.askToRate
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenAskIfLikedYes
+    );
   };
 
   _onPressSkip = () => {
     this.setState({
       isOpen: false
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenAskForRatingSkip
+    );
   };
 
   _onPressRateNow = () => {
@@ -225,12 +245,22 @@ class RatingModal extends React.Component {
     let updatedUserConfig = this.props.userConfig;
     updatedUserConfig.ratingCompleted = true;
     this._updateUserRatingsDetails(this.props.appKey, updatedUserConfig);
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenAskForRatingYes
+    );
   };
 
   _onPressNotHappyButNevermind = () => {
     this.setState({
       isOpen: false
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenFeedbackNo
+    );
   };
 
   _onPressNotHappyAndGetFeedback = () => {
@@ -239,6 +269,11 @@ class RatingModal extends React.Component {
     this.setState({
       isOpen: false
     });
+
+    AnalyticsHelper.trackEvent(
+      this.props.appKey,
+      AnalyticsHelper.eventEnum().ratingScreenFeedbackYesViaEmail
+    );
   };
 
   _checkTimeToShowPrompt(userConfig, ratingSequence) {

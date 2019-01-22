@@ -10,6 +10,11 @@ class CustomizationHelper {
     close: "Close"
   };
 
+  static showNextBehaviour = {
+    random: 1,
+    sequential: 2
+  };
+
   static getPrimaryColorForApp(appKey) {
     let primaryColorForApp;
     if (appKey === secondbrainApps.appKeys.sb) {
@@ -135,6 +140,44 @@ class CustomizationHelper {
     }
 
     return shouldShowMetaDescription;
+  }
+
+  static getConfig(appKey = secondbrainApps.appKeys.sb) {
+    let config = {
+      cacheTimeout: 7,
+      loggingEnabled: true,
+      showNextBehaviour: CustomizationHelper.showNextBehaviour.random
+    };
+
+    if (appKey === secondbrainApps.appKeys.sb) {
+      config.showNextBehaviour = CustomizationHelper.showNextBehaviour.random;
+    } else if (appKey === secondbrainApps.appKeys.rmed) {
+      config.showNextBehaviour =
+        CustomizationHelper.showNextBehaviour.sequential;
+    } else if (appKey === secondbrainApps.appKeys.ted) {
+      config.showNextBehaviour =
+        CustomizationHelper.showNextBehaviour.sequential;
+    } else if (appKey === secondbrainApps.appKeys.red) {
+      config.showNextBehaviour =
+        CustomizationHelper.showNextBehaviour.sequential;
+    }
+
+    return config;
+  }
+
+  static getAmplitudeAnalyticsKey(appKey) {
+    let apiKey;
+    if (appKey === secondbrainApps.appKeys.sb) {
+      apiKey = "6f64b7a3d08ab37a3252e61f6d832db3";
+    } else if (appKey === secondbrainApps.appKeys.rmed) {
+      apiKey = "54117478bc880f83b825426df5be7f12";
+    } else if (appKey === secondbrainApps.appKeys.ted) {
+      apiKey = "eb97b2baac761f905cdb4c770424e9c3";
+    } else if (appKey === secondbrainApps.appKeys.red) {
+      apiKey = "2be5ea23bd65844f8220b496577d3b08";
+    }
+
+    return apiKey;
   }
 }
 

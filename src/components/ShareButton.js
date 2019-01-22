@@ -9,7 +9,11 @@ import {
 } from "react-native";
 import { Constants } from "expo";
 import { Constants as AppConstants } from "./common/Index";
-import { StringHelper, CustomizationHelper } from "../helpers/Index";
+import {
+  StringHelper,
+  CustomizationHelper,
+  AnalyticsHelper
+} from "../helpers/Index";
 import { LogService } from "../services/Index";
 
 const secondbrainAppsConfig = require("../../amplify/backend/function/sbapigetallitems/src/config");
@@ -74,6 +78,11 @@ class ShareButton extends React.PureComponent {
             "com.apple.mobileslideshow.StreamShareService" // iCloud Photo Sharing - This also does nothing :{
           ]
         }
+      );
+
+      AnalyticsHelper.trackEvent(
+        this.props.appKey,
+        AnalyticsHelper.eventEnum().share
       );
 
       if (result.action === Share.sharedAction) {

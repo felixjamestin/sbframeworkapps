@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { CONFIG } from "../config/Index";
+import { CustomizationHelper } from "../helpers/Index";
 
 class StorageService {
   static async fetchData(appKey, entryID) {
@@ -49,7 +49,8 @@ class StorageService {
   static async _isSyncRequired(appKey) {
     const lastSyncedAtKey = appKey + "lastSyncedAt";
     const lastSyncedAt = await this._getFromLocalStorage(lastSyncedAtKey);
-    const cache_timeout_secs = CONFIG.CACHE_TIMEOUT * 24 * 60 * 60 * 1000;
+    const cache_timeout_secs =
+      CustomizationHelper.getConfig(appKey).cacheTimeout * 24 * 60 * 60 * 1000;
 
     let isSyncRequired =
       lastSyncedAt === null || lastSyncedAt + cache_timeout_secs < Date.now()

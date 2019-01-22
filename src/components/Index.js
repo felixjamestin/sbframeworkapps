@@ -7,7 +7,6 @@ export * from "./BodyMetaDesc";
 export * from "./BodyImage";
 export * from "./BlankState";
 export * from "./LoadingState";
-export * from "./Analytics.js";
 export * from "./ShowNextButton.js";
 export * from "./ShareButton.js";
 export * from "./BrowseAllButton.js";

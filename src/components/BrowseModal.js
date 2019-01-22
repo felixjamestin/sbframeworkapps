@@ -6,23 +6,48 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  Animated
 } from "react-native";
 
 import { Constants, ModalDialog } from "./common/Index";
-import { CustomizationHelper, DeviceInfoHelper } from "../helpers/Index";
+import {
+  CustomizationHelper,
+  StringHelper,
+  DeviceInfoHelper
+} from "../helpers/Index";
 
 var screen = Dimensions.get("window");
 
 class BrowseModal extends React.Component {
   constructor(props) {
     super(props);
+
+    this.localData = {
+      sections: [],
+      animationStagger: {
+        values: [],
+        animations: []
+      }
+    };
+
+    this.localData.sections = this._getSectionsForDisplay();
+    this.localData.animationStagger = this._initializeAnimations();
+  }
+
+  /*--------------------------------------------------
+  ⭑ Lifecycle events
+  ----------------------------------------------------*/
+  componentDidMount() {
+    this._startStaggerAnimation();
   }
 
   /*--------------------------------------------------
   ⭑ Render UI
   ----------------------------------------------------*/
   render() {
+    this._startStaggerAnimation();
+
     return (
       <ModalDialog
         style={{
@@ -30,7 +55,8 @@ class BrowseModal extends React.Component {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgba(34, 34, 34, .93)"
+          backgroundColor: "rgba(34, 34, 34, .93)",
+          opacity: 1
         }}
         isOpen={this.props.isOpen}
         onOpen={this._onOpen}
@@ -51,7 +77,7 @@ class BrowseModal extends React.Component {
   _renderSectionLinksGrid = () => {
     return (
       <FlatList
-        data={this._getSectionsForDisplay()}
+        data={this.localData.sections}
         renderItem={this._renderItem}
         contentContainerStyle={styles.sectionLinkContainer}
         numColumns={3}
@@ -62,19 +88,26 @@ class BrowseModal extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => {
-          this._onSectionTap(item);
+      <Animated.View
+        key={item.displayIndex}
+        style={{
+          opacity: this.localData.animationStagger.values[item.displayIndex - 1]
         }}
       >
-        <Text style={this._getStyleForSectionLink(item)}>
-          {item.displayIndex}
-        </Text>
-        <Text style={this._getStyleForSectionLinkSelectedBadge(item)}>
-          Selected
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            this._onSectionTap(item);
+          }}
+        >
+          <Text style={this._getStyleForSectionLink(item)}>
+            {item.displayIndex}
+          </Text>
+          <Text style={this._getStyleForSectionLinkSelectedBadge(item)}>
+            Selected
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
     );
   };
 
@@ -157,6 +190,38 @@ class BrowseModal extends React.Component {
   _isSectionLinkForCurrentlyShownItem(item) {
     return item.id === this.props.currentItem.id ? true : false;
   }
+
+  _startStaggerAnimation() {
+    this._resetAnimations();
+    Animated.stagger(20, this.localData.animationStagger.animations).start();
+  }
+
+  _initializeAnimations() {
+    let animationStagger = { values: [], animations: [] };
+
+    animationStagger.values = this.localData.sections.map(() => {
+      return new Animated.Value(0);
+    });
+
+    animationStagger.animations = this.localData.sections.map(
+      (value, index) => {
+        return Animated.timing(animationStagger.values[index], {
+          toValue: 1,
+          delay: 300,
+          duration: 500,
+          useNativeDriver: true
+        });
+      }
+    );
+
+    return animationStagger;
+  }
+
+  _resetAnimations() {
+    this.localData.sections.forEach((value, index) => {
+      this.localData.animationStagger.values[index].setValue(0);
+    });
+  }
 }
 
 /*---------------------------------------------------
@@ -167,12 +232,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
   sectionLinkContainer: {
-    paddingVertical: 100
+    paddingVertical: 100,
+    left: -5
   },
   sectionLinkText: {
     fontFamily: "roboto-thin",
-    fontSize: 52,
-    letterSpacing: 2,
+    fontSize: 42,
+    letterSpacing: 0,
     alignSelf: "center",
     textAlign: "center",
     paddingVertical: 20,

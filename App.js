@@ -8,14 +8,15 @@ import {
   BlankState,
   LoadingState,
   BrowseModal,
-  RatingModal,
-  AnalyticsHelper
+  RatingModal
 } from "./src/components/Index";
 import { Constants as AppConstants } from "./src/components/common/Index";
 import {
   ArrayHelper,
   AnimationHelper,
-  ReleaseHelper
+  ReleaseHelper,
+  CustomizationHelper,
+  AnalyticsHelper
 } from "./src/helpers/Index";
 import { StorageService, UserService, LogService } from "./src/services/Index";
 import config from "./aws-exports";
@@ -59,9 +60,9 @@ export default class App extends React.Component {
     this._initializeUser();
     this._initializeEntries(this.localData.appKey);
     this._initializeFonts();
+    this._initializeAnalytics(this.localData.appKey);
 
     Notifications.addListener(this._handleNotification);
-    AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().appOpen);
     AnimationHelper._startFadeInAnimation(this.localData.fadeAnim);
   }
 
@@ -151,13 +152,21 @@ export default class App extends React.Component {
   }
 
   _handleShowNextExcerpt() {
-    const item = this._getRandomItem();
+    const item =
+      CustomizationHelper.getConfig(this.localData.appKey).showNextBehaviour ===
+      CustomizationHelper.showNextBehaviour.random
+        ? this._getRandomItem()
+        : this._getNextSequentialItem();
+
     this.setState({
       currentItem: item
     });
 
     AnimationHelper._startFadeOutAndFadeInAnimation(this.localData.fadeAnim);
-    AnalyticsHelper.trackEvent(AnalyticsHelper.eventEnum().showNext);
+    AnalyticsHelper.trackEvent(
+      this.localData.appKey,
+      AnalyticsHelper.eventEnum().showNext
+    );
   }
 
   _handleShowSelectedItem(selectedItemID) {
@@ -175,6 +184,10 @@ export default class App extends React.Component {
 
   _handleShowBrowseAll() {
     this.setState({ showBrowseAll: true });
+    AnalyticsHelper.trackEvent(
+      this.localData.appKey,
+      AnalyticsHelper.eventEnum().browseAll
+    );
   }
 
   _handleHideBrowseAll() {
@@ -185,6 +198,20 @@ export default class App extends React.Component {
     return ArrayHelper._getRandomItemFromArray(dataSource);
   }
 
+  _getNextSequentialItem(
+    dataSource = this.state.dataSource,
+    currentItem = this.state.currentItem
+  ) {
+    const currentIndex = dataSource.findIndex((value, index) => {
+      return value.id === currentItem.id ? true : false;
+    });
+
+    let nextIndex = currentIndex + 1;
+    if (nextIndex === dataSource.length) nextIndex = 0;
+
+    return dataSource[nextIndex];
+  }
+
   async _handleNotification(notification) {
     let entryID = notification.data.id
       ? notification.data.id
@@ -193,6 +220,11 @@ export default class App extends React.Component {
       : "";
 
     this._initializeEntries(this.localData.appKey, entryID);
+
+    AnalyticsHelper.trackEvent(
+      this.localData.appKey,
+      AnalyticsHelper.eventEnum().appOpenFromNotification
+    );
   }
 
   async _initializeEntries(appKey, id = "") {
@@ -237,6 +269,10 @@ export default class App extends React.Component {
     this.setState({
       isFontLoadingDone: true
     });
+  }
+
+  _initializeAnalytics(appKey) {
+    AnalyticsHelper.initialize(appKey);
   }
 }
 
