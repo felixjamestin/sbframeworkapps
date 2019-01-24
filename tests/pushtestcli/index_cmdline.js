@@ -7,7 +7,8 @@ const requestpromise = require("request-promise");
 
 // NOTE: Change when required
 // const appKeyGlobal = "SECONDBRAIN";
-const appKeyGlobal = "RAMANA_MAHARISHI_ENGLISH_DAILY";
+// const appKeyGlobal = "RAMANA_MAHARISHI_ENGLISH_DAILY";
+const appKeyGlobal = "TAO_ENGLISH_DAILY";
 
 main();
 
@@ -74,7 +75,7 @@ function sendPushNotifications(randomEntry, pushTokens) {
   let { title, body } = getPushTextForEntry(randomEntry);
 
   const pushTokensExcludingExpoClient = pushTokens.Items.filter(item => {
-    return item.appType !== "expo" ? false : true; // Don't send to non-expo clients since this is for testing...
+    return item.appType !== "expo" ? true : true; // NOTE: Don't send to non-expo clients since this is for testing...
   });
 
   const pushTokensFilteredByAppKey = pushTokensExcludingExpoClient.filter(
@@ -127,7 +128,6 @@ function getPushTextForEntry(item) {
   return pushContent;
 }
 
-// TODO: Re-use common logic used below as well as in the mobile clients
 function convertToSentenceCase(string) {
   const sanitizedString = sanitizeString(string);
   let markDownRegex = /([#*]{1,5}\s["“']*\w|[\.\!\?]\s*\w)/g;

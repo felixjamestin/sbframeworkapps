@@ -31,16 +31,18 @@ app.get("/items", async function(req, res) {
   try {
     let appKey = req.apiGateway.event.queryStringParameters.appKey;
 
-    let items = await _getEntriesFromAirtable(appKey);
+    let initialItems = await _getEntriesFromAirtable(appKey);
+    let allItems = await _getAllEntriesIncludingOffsets(appKey, initialItems);
 
-    let sanitizedItems = items.records.filter(item => {
+    let sanitizedItems = allItems.records.filter(item => {
       return Object.keys(item.fields).length > 0;
     });
 
     let entryID = _getIDForCurrentItem(req.apiGateway.event);
     let currentItem = _getCurrentItem(sanitizedItems, entryID);
 
-    console.log("currentItem" + ": " + JSON.stringify(currentItem));
+    // console.log("currentItem" + ": " + JSON.stringify(currentItem));
+    // console.log(sanitizedItems.length);
     console.log("allItems" + ": " + JSON.stringify(sanitizedItems));
     res.json({ currentItem: currentItem, allItems: sanitizedItems });
   } catch (err) {
@@ -55,8 +57,8 @@ app.get("/items/*", function(req, res) {
 /*--------------------------------------------------
 ⭑ Private functions
 ----------------------------------------------------*/
-async function _getEntriesFromAirtable(appKey) {
-  const appDetails = _getDetailsForAppKey(appKey);
+async function _getEntriesFromAirtable(appKey, offset = "") {
+  const appDetails = _getDetailsForAppKey(appKey, offset);
   console.log(appDetails);
 
   const requestOptions = {
@@ -73,10 +75,50 @@ async function _getEntriesFromAirtable(appKey) {
   return requestpromise(requestOptions);
 }
 
-function _getDetailsForAppKey(appKey) {
-  return secondbrainApps.find(element => {
+async function _getAllEntriesIncludingOffsets(appKey, items) {
+  let offset = _getOffset(items);
+  let offsetExists = _doesOffsetExist(offset);
+  let nextItemPage;
+  while (offsetExists === true) {
+    nextItemPage = await _getEntriesFromAirtable(appKey, offset);
+    items.records = items.records.concat(nextItemPage.records);
+    // Update offset
+    offset = _getOffset(nextItemPage);
+    offsetExists = _doesOffsetExist(offset);
+  }
+  return items;
+}
+
+function _getOffset(items) {
+  return items.offset;
+}
+
+function _doesOffsetExist(offset) {
+  return offset !== "" && offset !== undefined && offset !== null
+    ? true
+    : false;
+}
+
+function _getDetailsForAppKey(appKey, offset) {
+  let appDetails = secondbrainApps.find(element => {
     return element.key === appKey;
   });
+
+  let appURI = appDetails.uri;
+  appURI = _addOffsetToURI(appURI, offset);
+
+  return {
+    key: appDetails.key,
+    token: appDetails.token,
+    uri: appURI,
+    appUri: appDetails.appUri
+  };
+}
+
+function _addOffsetToURI(uri, offset) {
+  if (offset === "") return uri;
+  uri = uri + "&offset=" + offset;
+  return uri;
 }
 
 function _getCurrentItem(items, entryID) {

@@ -21,7 +21,7 @@ const secondbrainApps = [
     token: "key34bOupUaggtKkP",
     uri:
       "https://api.airtable.com/v0/appfE7KsVoV5uiRhK/taodaily?maxRecords=1000&view=Grid%20view",
-    appUri: ""
+    appUri: "https://goo.gl/PBvJk3"
   },
   {
     key: Constants.appKeys.red, // RUMI_ENGLIGH_DAILY

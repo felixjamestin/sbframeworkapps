@@ -2,8 +2,8 @@
   "expo": {
     "name": "Ramana Maharishi Daily",
     "description": "App that surfaces insights from Ramana Maharishi",
-    "icon": "./assets/rmed-prod-icon.png",
-    "version": "1.0.6",
+    "icon": "./assets/rmed-prod-final-icon.png",
+    "version": "1.0.8",
     "slug": "ramanamaharishidaily",
     "privacy": "public",
     "sdkVersion": "32.0.0",

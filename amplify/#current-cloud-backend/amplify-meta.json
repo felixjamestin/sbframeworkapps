@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/auth/cognitodd79bfe5-cloudformation-template.yml",
 				"logicalId": "authcognitodd79bfe5"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:33.992Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.789Z",
 			"output": {
 				"AppClientSecret": "18dfhv6no0r40rh3nhl3nrs4cj4000sq9reno227jg28dgcm8nct",
 				"UserPoolId": "us-east-1_58soxZ75M",
@@ -40,7 +40,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/analytics/pinpoint-cloudformation-template.json",
 				"logicalId": "analyticssecondbrainapp"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:33.993Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.790Z",
 			"output": {
 				"appName": "secondbrainapp",
 				"Region": "us-east-1",
@@ -57,7 +57,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/storage/users-cloudformation-template.json",
 				"logicalId": "storageusers"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:33.994Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.797Z",
 			"output": {
 				"PartitionKeyName": "token",
 				"Region": "us-east-1",
@@ -90,7 +90,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/function/sbapi-cloudformation-template.json",
 				"logicalId": "functionsbapi"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:33.995Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.798Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:547241034615:function:sbapiRegisterUsersForPush",
@@ -104,19 +104,19 @@
 			"build": true,
 			"dependsOn": [],
 			"lastBuildTimeStamp": "2019-01-12T18:44:41.522Z",
-			"lastPackageTimeStamp": "2019-01-12T18:44:45.752Z",
-			"distZipFilename": "sbapigetallitems-1547318681-latest-build.zip",
+			"lastPackageTimeStamp": "2019-01-24T09:25:35.251Z",
+			"distZipFilename": "sbapigetallitems-1548321933-latest-build.zip",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/function/sbapigetallitems-cloudformation-template.json",
 				"logicalId": "functionsbapigetallitems"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:34.000Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.803Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:547241034615:function:sbapigetallitems",
 				"Name": "sbapigetallitems"
 			},
-			"lastPushDirHash": "ixmQpgxM4Luin/RLij2S8Iie0KA="
+			"lastPushDirHash": "5fnLOAdX7PF9mp7zDzRQjmj1r74="
 		},
 		"sbapisendnotifications": {
 			"service": "Lambda",
@@ -124,19 +124,19 @@
 			"build": true,
 			"dependsOn": [],
 			"lastBuildTimeStamp": "2019-01-09T11:34:02.666Z",
-			"lastPackageTimeStamp": "2019-01-12T18:44:47.433Z",
-			"distZipFilename": "sbapisendnotifications-1547318681-latest-build.zip",
+			"lastPackageTimeStamp": "2019-01-24T06:16:25.632Z",
+			"distZipFilename": "sbapisendnotifications-1548310580-latest-build.zip",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/function/sbapisendnotifications-cloudformation-template.json",
 				"logicalId": "functionsbapisendnotifications"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:34.000Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.803Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:547241034615:function:sbapisendnotifications",
 				"Name": "sbapisendnotifications"
 			},
-			"lastPushDirHash": "/EvNM+MDGIVJB2yDuRpX230QpJM="
+			"lastPushDirHash": "h2lMoM1DNdnj+TQU6b4LAk85HYA="
 		}
 	},
 	"api": {
@@ -173,7 +173,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/secondbrainapp-20181023151350-deployment/amplify-cfn-templates/api/sbapi-cloudformation-template.json",
 				"logicalId": "apisbapi"
 			},
-			"lastPushTimeStamp": "2019-01-12T18:47:33.998Z",
+			"lastPushTimeStamp": "2019-01-24T09:28:26.800Z",
 			"output": {
 				"ApiName": "sbapi",
 				"RootUrl": "https://h9r2pkur9g.execute-api.us-east-1.amazonaws.com/Prod"

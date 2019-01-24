@@ -3,7 +3,7 @@
     "name": "Secondbrain",
     "description": "App that resurfaces ideas – book excerpts, quotes, insights & notes",
     "icon": "./assets/sb-prod-icon.png",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "slug": "secondbrain",
     "privacy": "public",
     "sdkVersion": "32.0.0",

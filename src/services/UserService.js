@@ -41,8 +41,9 @@ class UserService {
       shouldSendNotifications: true,
       notificationTime: notificationTime,
       notificationFrequency: notificationFrequency,
-      email: "felixjamestin@gmail.com", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
-      appType: Constants.appOwnership
+      email: "", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
+      appType: Constants.appOwnership,
+      updatedOn: new Date().toLocaleDateString()
     };
 
     return UserService.userData;
@@ -58,16 +59,17 @@ class UserService {
       response: true,
       queryStringParameters: {},
       body: {
-        token: userData.token,
+        token: userData.deviceToken,
         email: userData.email,
         shouldSendNotifications: userData.shouldSendNotifications,
         timeZoneOffset: userData.timeZoneOffset,
         notificationTime: userData.notificationTime,
         notificationFrequency: userData.notificationFrequency,
-        deviceID: userData.deviceId,
+        deviceID: userData.deviceID,
         deviceName: userData.deviceName,
-        appType: userData.appOwnership,
-        appKey: appKey
+        appType: userData.appType,
+        appKey: appKey,
+        updatedOn: userData.updatedOn
       }
     };
     return await API.post(apiName, createPath, userDetails);
