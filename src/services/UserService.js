@@ -41,7 +41,7 @@ class UserService {
       shouldSendNotifications: true,
       notificationTime: notificationTime,
       notificationFrequency: notificationFrequency,
-      email: "", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
+      email: "felixjamestin@gmail.com", //NOTE: Temporary in case we do full registration later; it isn't used anywhere
       appType: Constants.appOwnership,
       updatedOn: new Date().toLocaleDateString()
     };
@@ -72,7 +72,9 @@ class UserService {
         updatedOn: userData.updatedOn
       }
     };
-    return await API.post(apiName, createPath, userDetails);
+    const result = await API.post(apiName, createPath, userDetails);
+    console.log(result);
+    return result;
   }
 
   static async _getOSPermissionForPushNotifications() {

@@ -144,7 +144,7 @@ class CustomizationHelper {
 
   static getConfig(appKey = secondbrainApps.appKeys.sb) {
     let config = {
-      cacheTimeout: 0,
+      cacheTimeout: 2,
       loggingEnabled: true,
       showNextBehaviour: CustomizationHelper.showNextBehaviour.random
     };
