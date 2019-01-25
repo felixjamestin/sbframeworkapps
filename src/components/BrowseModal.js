@@ -11,11 +11,7 @@ import {
 } from "react-native";
 
 import { Constants, ModalDialog } from "./common/Index";
-import {
-  CustomizationHelper,
-  StringHelper,
-  DeviceInfoHelper
-} from "../helpers/Index";
+import { CustomizationHelper, DeviceInfoHelper } from "../helpers/Index";
 
 var screen = Dimensions.get("window");
 
@@ -139,17 +135,12 @@ class BrowseModal extends React.Component {
   ⭑ Helpers
   ----------------------------------------------------*/
   _onClose = () => {
-    console.log("Modal just closed");
     this.props.onHide();
   };
 
-  _onOpen = () => {
-    console.log("Modal just opened");
-  };
+  _onOpen = () => {};
 
-  _onClosingState = state => {
-    console.log("The open/close of the swipeToClose just changed: " + state);
-  };
+  _onClosingState = state => {};
 
   _getSectionsForDisplay() {
     let sections = [];

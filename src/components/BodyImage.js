@@ -65,7 +65,6 @@ class BodyImage extends PureComponent {
   ----------------------------------------------------*/
   getItemStyles() {
     let style;
-    console.log(this.props.doesContentExist === true);
 
     if (
       this.props.doesDescriptionExist === true &&

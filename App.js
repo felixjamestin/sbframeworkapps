@@ -8,7 +8,8 @@ import {
   BlankState,
   LoadingState,
   BrowseModal,
-  RatingModal
+  RatingModal,
+  WelcomeModal
 } from "./src/components/Index";
 import { Constants as AppConstants } from "./src/components/common/Index";
 import {
@@ -31,6 +32,7 @@ export default class App extends React.Component {
 
     const channel = Constants.manifest.releaseChannel;
     const appKey = ReleaseHelper.getAppKeyFromExpoReleaseChannel(channel);
+
     this.localData = {
       appKey: appKey,
       fadeAnim: new Animated.Value(0),
@@ -42,13 +44,15 @@ export default class App extends React.Component {
       currentItem: {},
       isDataLoadingDone: false,
       isFontLoadingDone: false,
-      showBrowseAll: false
+      showBrowseAll: false,
+      showWelcomeModal: false
     };
 
     // Bindings
     this._handleShowNextExcerpt = this._handleShowNextExcerpt.bind(this);
     this._handleShowBrowseAll = this._handleShowBrowseAll.bind(this);
     this._handleHideBrowseAll = this._handleHideBrowseAll.bind(this);
+    this._handleHideWelcomeModal = this._handleHideWelcomeModal.bind(this);
     this._handleNotification = this._handleNotification.bind(this);
     this._handleShowSelectedItem = this._handleShowSelectedItem.bind(this);
   }
@@ -126,6 +130,12 @@ export default class App extends React.Component {
           appKey={this.localData.appKey}
           userConfig={this.localData.userConfig}
         />
+        <WelcomeModal
+          appKey={this.localData.appKey}
+          userConfig={this.localData.userConfig}
+          isOpen={this.state.showWelcomeModal}
+          onHide={this._handleHideWelcomeModal}
+        />
       </View>
     );
   }
@@ -192,6 +202,10 @@ export default class App extends React.Component {
 
   _handleHideBrowseAll() {
     this.setState({ showBrowseAll: false });
+  }
+
+  _handleHideWelcomeModal() {
+    this.setState({ showWelcomeModal: false });
   }
 
   _getRandomItem(dataSource = this.state.dataSource) {

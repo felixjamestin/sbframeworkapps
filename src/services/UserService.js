@@ -73,7 +73,6 @@ class UserService {
       }
     };
     const result = await API.post(apiName, createPath, userDetails);
-    console.log(result);
     return result;
   }
 

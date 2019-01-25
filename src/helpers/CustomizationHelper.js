@@ -7,7 +7,9 @@ class CustomizationHelper {
     showNext: "Show Next",
     browseAll: "Browse all",
     share: "Share",
-    close: "Close"
+    close: "Close",
+    about: "About",
+    proceed: "Proceed"
   };
 
   static showNextBehaviour = {
@@ -94,6 +96,30 @@ class CustomizationHelper {
         : appKey === secondbrainApps.appKeys.red
         ? require("../../assets/red-close-icon.png")
         : "";
+    } else if (
+      customizationType == CustomizationHelper.customizationElements.about
+    ) {
+      return appKey === secondbrainApps.appKeys.sb
+        ? require("../../assets/ted-heart-icon.png")
+        : appKey === secondbrainApps.appKeys.rmed
+        ? require("../../assets/ted-heart-icon.png")
+        : appKey === secondbrainApps.appKeys.ted
+        ? require("../../assets/ted-heart-icon.png")
+        : appKey === secondbrainApps.appKeys.red
+        ? require("../../assets/ted-heart-icon.png")
+        : "";
+    } else if (
+      customizationType == CustomizationHelper.customizationElements.proceed
+    ) {
+      return appKey === secondbrainApps.appKeys.sb
+        ? require("../../assets/sb-next-icon.png")
+        : appKey === secondbrainApps.appKeys.rmed
+        ? require("../../assets/rmed-next-icon.png")
+        : appKey === secondbrainApps.appKeys.ted
+        ? require("../../assets/ted-next-icon.png")
+        : appKey === secondbrainApps.appKeys.red
+        ? require("../../assets/red-next-icon.png")
+        : "";
     }
   }
 
@@ -140,6 +166,24 @@ class CustomizationHelper {
     }
 
     return shouldShowMetaDescription;
+  }
+
+  static shouldShowAboutPage(appKey) {
+    let shouldShowAboutPage;
+
+    if (appKey === secondbrainApps.appKeys.sb) {
+      shouldShowAboutPage = false;
+    } else if (appKey === secondbrainApps.appKeys.rmed) {
+      shouldShowAboutPage = false;
+    } else if (appKey === secondbrainApps.appKeys.ted) {
+      shouldShowAboutPage = true;
+    } else if (appKey === secondbrainApps.appKeys.red) {
+      shouldShowAboutPage = false;
+    } else {
+      shouldShowAboutPage = false;
+    }
+
+    return shouldShowAboutPage;
   }
 
   static getConfig(appKey = secondbrainApps.appKeys.sb) {

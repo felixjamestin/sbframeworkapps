@@ -12,3 +12,4 @@ export * from "./ShareButton.js";
 export * from "./BrowseAllButton.js";
 export * from "./BrowseModal";
 export * from "./RatingModal";
+export * from "./WelcomeModal";

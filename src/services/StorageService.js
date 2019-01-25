@@ -20,6 +20,7 @@ class StorageService {
       userConfig = {
         ratingCompleted: false,
         ratingShownCount: 0,
+        welcomeShown: false,
         appFirstOpened: Date.now()
       };
       this._setLocalStorage(localDataKey, userConfig);
