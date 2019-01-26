@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Animated
+  Animated,
+  Easing
 } from "react-native";
 
 import { Constants, ModalDialog } from "./common/Index";
@@ -20,7 +21,7 @@ class WelcomeModal extends React.Component {
     super(props);
 
     this.localData = {
-      isOpen: false,
+      wasWelcomeAutoShown: false,
       animationStagger: {
         values: [],
         animations: []
@@ -28,13 +29,12 @@ class WelcomeModal extends React.Component {
     };
 
     this.localData.animationStagger = this._initializeAnimations();
-  }
-
-  /*--------------------------------------------------
-  ⭑ Lifecycle events
-  ----------------------------------------------------*/
-  componentDidMount() {
-    this._startStaggerAnimation();
+    this.localData.wasWelcomeAutoShown =
+      this.props.userConfig.welcomeShown === undefined ||
+      this.props.userConfig.welcomeShown === null ||
+      this.props.userConfig.welcomeShown === false
+        ? false
+        : true;
   }
 
   /*--------------------------------------------------
@@ -50,7 +50,7 @@ class WelcomeModal extends React.Component {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgba(34, 34, 34, .9)",
+          backgroundColor: "rgba(34, 34, 34, .98)",
           opacity: 1
         }}
         isOpen={this._checkIfShouldAutoShowPage()}
@@ -88,41 +88,41 @@ class WelcomeModal extends React.Component {
           <Image source={icon} style={styles.titleImage} resizeMode="contain" />
           <Text style={styles.title}>Thank you for using this app</Text>
         </Animated.View>
-        <Animated.Text
-          style={[
-            {
-              opacity: this.localData.animationStagger.values[1]
-            },
-            styles.body
-          ]}
+
+        <Animated.View
+          style={{
+            opacity: this.localData.animationStagger.values[1]
+          }}
         >
-          Before you start: The Tao Te Ching was written over 2500 years ago by
-          Lao Tzu, a Chinese sage. Its message resonates so deeply that it's one
-          of the most translated texts of all time.
-        </Animated.Text>
-        <Animated.Text
-          style={[
-            {
-              opacity: this.localData.animationStagger.values[3]
-            },
-            styles.body
-          ]}
+          <Animated.Text style={styles.body}>
+            Before you start: The Tao Te Ching was written over 2500 years ago
+            by Lao Tzu, a Chinese sage. Its message resonates so deeply that
+            it's one of the most translated texts of all time.
+          </Animated.Text>
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            opacity: this.localData.animationStagger.values[2]
+          }}
         >
-          However, many first-time readers often find the verses confusing. If
-          so, do not worry; you’re not alone.
-        </Animated.Text>
-        <Animated.Text
-          style={[
-            {
-              opacity: this.localData.animationStagger.values[3]
-            },
-            styles.body
-          ]}
+          <Animated.Text style={styles.body}>
+            However, many first-time readers often find the verses confusing. If
+            so, do not worry; you’re not alone.
+          </Animated.Text>
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            opacity: this.localData.animationStagger.values[3]
+          }}
         >
-          We recommend reading a few verses at a time and coming back regularly
-          until the meaning is intuited – the daily reminders are especially
-          helpful for this. Thanks & be well.
-        </Animated.Text>
+          <Animated.Text style={styles.body}>
+            We recommend reading a few verses at a time and coming back
+            regularly until the meaning is intuited – the daily reminders are
+            especially helpful for this. Thanks & be well.
+          </Animated.Text>
+        </Animated.View>
       </View>
     );
   };
@@ -138,7 +138,14 @@ class WelcomeModal extends React.Component {
       : styles.dismissModalContainer_small;
 
     return (
-      <View style={style}>
+      <Animated.View
+        style={[
+          {
+            opacity: this.localData.animationStagger.values[4]
+          },
+          style
+        ]}
+      >
         <TouchableOpacity
           onPress={this.props.onHide}
           style={styles.dismissModalButton}
@@ -147,7 +154,7 @@ class WelcomeModal extends React.Component {
           <Text style={styles.closeText}>Start using the app</Text>
           <Image source={icon} style={styles.icon} resizeMode="contain" />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -159,10 +166,7 @@ class WelcomeModal extends React.Component {
       this.props.appKey
     );
 
-    let shouldAutoPopupPageForApp = this._checkUserConfigForApp(
-      this.props.appKey,
-      this.props.userConfig
-    );
+    let shouldAutoPopupPageForApp = this._checkUserConfigForApp();
 
     let openPage =
       shouldShowPageForApp === true &&
@@ -173,27 +177,26 @@ class WelcomeModal extends React.Component {
     return openPage;
   }
 
-  _checkUserConfigForApp(appKey, userConfig) {
+  _checkUserConfigForApp() {
     let shouldAutoPopupPageForApp = false;
+    let wasWelcomeAutoShown = this.localData.wasWelcomeAutoShown;
 
-    if (userConfig.welcomeShown === true) {
+    if (wasWelcomeAutoShown === true) {
       shouldAutoPopupPageForApp = false;
-    } else if (
-      userConfig.welcomeShown === undefined ||
-      userConfig.welcomeShown === null ||
-      userConfig.welcomeShown === false
-    ) {
+    } else if (wasWelcomeAutoShown === false) {
       shouldAutoPopupPageForApp = true;
-      this._updatePageAutoShownDetails(appKey, userConfig);
+      this._updatePageAutoShownDetails();
     }
 
     return shouldAutoPopupPageForApp;
   }
 
-  _updatePageAutoShownDetails(appKey, userConfig) {
-    let updatedUserConfig = userConfig;
+  _updatePageAutoShownDetails() {
+    this.localData.wasWelcomeAutoShown = true;
+
+    let updatedUserConfig = this.props.userConfig;
     updatedUserConfig.welcomeShown = true;
-    StorageService.storeConfigData(appKey, updatedUserConfig);
+    StorageService.storeConfigData(this.props.appKey, updatedUserConfig);
   }
 
   _onClose = () => {
@@ -206,22 +209,25 @@ class WelcomeModal extends React.Component {
 
   _startStaggerAnimation() {
     this._resetAnimations();
-    Animated.stagger(20, this.localData.animationStagger.animations).start();
+    Animated.stagger(200, this.localData.animationStagger.animations).start();
   }
 
   _initializeAnimations() {
     let animationStagger = { values: [], animations: [] };
 
+    animationStagger.values[0] = new Animated.Value(0);
     animationStagger.values[1] = new Animated.Value(0);
     animationStagger.values[2] = new Animated.Value(0);
     animationStagger.values[3] = new Animated.Value(0);
+    animationStagger.values[4] = new Animated.Value(0);
 
     animationStagger.animations = animationStagger.values.map(
       (value, index) => {
         return Animated.timing(animationStagger.values[index], {
           toValue: 1,
-          delay: 300,
-          duration: 500,
+          delay: 200,
+          duration: 400,
+          easing: Easing.linear,
           useNativeDriver: true
         });
       }

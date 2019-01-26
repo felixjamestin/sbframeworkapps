@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ramana Maharishi Daily Staging",
     "description": "App that surfaces insights from Ramana Maharishi",
-    "icon": "./assets/rmed-staging-icon.png",
+    "icon": "./assets/rmed-prod-final-icon.png",
     "version": "1.0.4",
     "slug": "ramanamaharishidaily",
     "privacy": "public",
