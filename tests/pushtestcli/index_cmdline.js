@@ -4,11 +4,10 @@
 ----------------------------------------------------*/
 const AWS = require("aws-sdk");
 const requestpromise = require("request-promise");
+const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
 
 // NOTE: Change when required
-// const appKeyGlobal = "SECONDBRAIN";
-// const appKeyGlobal = "RAMANA_MAHARISHI_ENGLISH_DAILY";
-const appKeyGlobal = "TAO_ENGLISH_DAILY";
+const appKeyGlobal = secondbrainApps.appKeys.ted;
 
 main();
 

@@ -35,13 +35,13 @@ export default class App extends React.Component {
 
     this.localData = {
       appKey: appKey,
-      fadeAnim: new Animated.Value(0),
-      userConfig: {}
+      fadeAnim: new Animated.Value(0)
     };
 
     this.state = {
       dataSource: [],
       currentItem: {},
+      userConfig: {},
       isDataLoadingDone: false,
       isFontLoadingDone: false,
       showBrowseAll: false,
@@ -128,11 +128,11 @@ export default class App extends React.Component {
         />
         <RatingModal
           appKey={this.localData.appKey}
-          userConfig={this.localData.userConfig}
+          userConfig={this.state.userConfig}
         />
         <WelcomeModal
           appKey={this.localData.appKey}
-          userConfig={this.localData.userConfig}
+          userConfig={this.state.userConfig}
           isOpen={this.state.showWelcomeModal}
           onHide={this._handleHideWelcomeModal}
         />
@@ -143,11 +143,6 @@ export default class App extends React.Component {
   /*--------------------------------------------------
   ⭑ Helpers & Handlers
   ----------------------------------------------------*/
-  async _initializeUser() {
-    UserService.registerUser(this.localData.appKey);
-    await this._fetchUserConfig(this.localData.appKey);
-  }
-
   _checkIfAppLoadingInProgress() {
     const isAppLoadingInProgress =
       this.state.isDataLoadingDone === false ||
@@ -263,9 +258,15 @@ export default class App extends React.Component {
     }
   }
 
+  async _initializeUser() {
+    await UserService.registerUser(this.localData.appKey);
+    await this._fetchUserConfig(this.localData.appKey);
+  }
+
   async _fetchUserConfig(appKey) {
     try {
-      this.localData.userConfig = await StorageService.fetchConfigData(appKey);
+      let config = await StorageService.fetchConfigData(appKey);
+      this.setState({ userConfig: config });
     } catch (error) {
       LogService.log(error.name + ": " + error.message);
     }

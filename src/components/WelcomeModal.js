@@ -21,6 +21,7 @@ class WelcomeModal extends React.Component {
     super(props);
 
     this.localData = {
+      isReady: false,
       wasWelcomeAutoShown: false,
       animationStagger: {
         values: [],
@@ -29,12 +30,6 @@ class WelcomeModal extends React.Component {
     };
 
     this.localData.animationStagger = this._initializeAnimations();
-    this.localData.wasWelcomeAutoShown =
-      this.props.userConfig.welcomeShown === undefined ||
-      this.props.userConfig.welcomeShown === null ||
-      this.props.userConfig.welcomeShown === false
-        ? false
-        : true;
   }
 
   /*--------------------------------------------------
@@ -166,6 +161,9 @@ class WelcomeModal extends React.Component {
       this.props.appKey
     );
 
+    let isReady = Object.keys(this.props.userConfig).length > 0 ? true : false; // Required since the userconfig is fetched async
+    if (isReady === false) return false;
+
     let shouldAutoPopupPageForApp = this._checkUserConfigForApp();
 
     let openPage =
@@ -179,7 +177,13 @@ class WelcomeModal extends React.Component {
 
   _checkUserConfigForApp() {
     let shouldAutoPopupPageForApp = false;
-    let wasWelcomeAutoShown = this.localData.wasWelcomeAutoShown;
+
+    let wasWelcomeAutoShown =
+      this.props.userConfig.welcomeShown === undefined ||
+      this.props.userConfig.welcomeShown === null ||
+      this.props.userConfig.welcomeShown === false
+        ? false
+        : true;
 
     if (wasWelcomeAutoShown === true) {
       shouldAutoPopupPageForApp = false;
@@ -192,8 +196,6 @@ class WelcomeModal extends React.Component {
   }
 
   _updatePageAutoShownDetails() {
-    this.localData.wasWelcomeAutoShown = true;
-
     let updatedUserConfig = this.props.userConfig;
     updatedUserConfig.welcomeShown = true;
     StorageService.storeConfigData(this.props.appKey, updatedUserConfig);

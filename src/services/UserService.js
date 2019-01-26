@@ -15,7 +15,10 @@ class UserService {
       this._prepareUserData(token);
 
       // 3. Send user details (push token, user timezone, etc) to backend
-      this._sendUserDetailsToBackend(appKey, UserService.userData);
+      const result = await this._sendUserDetailsToBackend(
+        appKey,
+        UserService.userData
+      );
     } catch (error) {
       console.log(error);
     }
