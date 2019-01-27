@@ -81,7 +81,7 @@ class WelcomeModal extends React.Component {
           ]}
         >
           <Image source={icon} style={styles.titleImage} resizeMode="contain" />
-          <Text style={styles.title}>Thank you for using this app</Text>
+          <Text style={styles.title}>Thank you for buying this app</Text>
         </Animated.View>
 
         <Animated.View
