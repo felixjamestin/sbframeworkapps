@@ -176,6 +176,7 @@ class RatingModal extends React.Component {
   ----------------------------------------------------*/
   _checkAndShowRatingsPrompt(appKey, userConfig) {
     if (this._ratingDisplayCompleted(userConfig, maxShowCount) == true) return;
+
     let shouldShowPrompt = this._checkTimeToShowPrompt(
       userConfig,
       ratingSequence

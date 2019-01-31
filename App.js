@@ -259,14 +259,15 @@ export default class App extends React.Component {
   }
 
   async _initializeUser() {
-    await UserService.registerUser(this.localData.appKey);
-    await this._fetchUserConfig(this.localData.appKey);
+    let userConfig = await this._fetchUserConfig(this.localData.appKey);
+    await UserService.registerUser(this.localData.appKey, userConfig);
   }
 
   async _fetchUserConfig(appKey) {
     try {
       let config = await StorageService.fetchConfigData(appKey);
       this.setState({ userConfig: config });
+      return config;
     } catch (error) {
       LogService.log(error.name + ": " + error.message);
     }
