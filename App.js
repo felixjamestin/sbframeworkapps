@@ -44,6 +44,7 @@ export default class App extends React.Component {
       userConfig: {},
       isDataLoadingDone: false,
       isFontLoadingDone: false,
+      isInitializationDone: false,
       showBrowseAll: false,
       showWelcomeModal: false
     };
@@ -238,6 +239,9 @@ export default class App extends React.Component {
 
   async _initializeEntries(appKey, id = "") {
     try {
+      if (this._checkIfAllowInitialization(id) === true) return;
+
+      // Fetch entries
       const items = await StorageService.fetchData(appKey, id);
 
       // Set internal state
@@ -245,6 +249,7 @@ export default class App extends React.Component {
       let currentItem = items ? items.currentItem : "";
       this.setState({
         isDataLoadingDone: true,
+        isInitializationDone: true,
         dataSource: dataSource,
         currentItem: currentItem
       });
@@ -256,6 +261,12 @@ export default class App extends React.Component {
         LogService.loggingType.remote
       );
     }
+  }
+
+  _checkIfAllowInitialization(id) {
+    return id !== "" || this.state.isInitializationDone === false
+      ? true
+      : false;
   }
 
   async _initializeUser() {
