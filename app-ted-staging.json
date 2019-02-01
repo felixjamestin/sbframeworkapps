@@ -2,8 +2,8 @@
   "expo": {
     "name": "Tao Te Ching Daily",
     "description": "App that surfaces daily insights from the Tao Te Ching",
-    "icon": "./assets/ted-prod-icon-final.png",
-    "version": "1.2.0",
+    "icon": "./assets/ted-prod-icon-staging.png",
+    "version": "1.1.9",
     "slug": "taotechingdaily",
     "privacy": "public",
     "sdkVersion": "32.0.0",

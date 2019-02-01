@@ -1,3 +1,5 @@
+// NOTE: Edit for new variants
+
 const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");
 
 class ReleaseHelper {

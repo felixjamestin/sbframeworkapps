@@ -239,7 +239,7 @@ export default class App extends React.Component {
 
   async _initializeEntries(appKey, id = "") {
     try {
-      if (this._checkIfAllowInitialization(id) === true) return;
+      if (this._checkIfAllowInitialization(id) === false) return;
 
       // Fetch entries
       const items = await StorageService.fetchData(appKey, id);
@@ -263,8 +263,9 @@ export default class App extends React.Component {
     }
   }
 
-  _checkIfAllowInitialization(id) {
-    return id !== "" || this.state.isInitializationDone === false
+  _checkIfAllowInitialization(idFromPushNotification) {
+    return idFromPushNotification !== "" ||
+      this.state.isInitializationDone === false
       ? true
       : false;
   }

@@ -54,8 +54,8 @@ class ShareButton extends React.PureComponent {
   _onShare = async () => {
     try {
       let item = this.props.currentItem.fields;
-      let title = "";
-      let url = item.image !== undefined ? item.image[0].url : "";
+      let title = "An excerpt I liked";
+      let url = item.image === undefined ? "" : item.image[0].url;
       let message = this._getMessageForSharing(this.props.appKey, item);
 
       const result = await Share.share(
@@ -115,7 +115,7 @@ class ShareButton extends React.PureComponent {
 
     let appURI = this._getAppStoreURI(this.props.appKey);
     let hookCopy =
-      "Liked this? Download the app and get inspired with powerful, daily reminders: ";
+      "Liked this? Download the app and get inspired with powerful, daily nudges: ";
     let hook = appURI !== "" ? "-" + endLine + hookCopy + endLine + appURI : "";
 
     let message;

@@ -91,7 +91,7 @@ class RatingModal extends React.Component {
     } else if (currentPage === pages.askToRate) {
       title = "Super! Would you mind giving us a rating?";
       description =
-        "Thanks in advance. Your feedback encourages us to keep making great products.";
+        "It’ll take just a second or two, and your feedback encourages us to keep making great products.";
       image = require("../../assets/smiley_excited.png");
       backButtonStyle = styles.backButtonStyleShow;
     } else if (currentPage === pages.askForFeedback) {

@@ -1,3 +1,5 @@
+// NOTE: Edit for new variants
+
 import { Constants } from "../components/common/Index";
 
 const secondbrainApps = require("../../amplify/backend/function/sbapigetallitems/src/constants");

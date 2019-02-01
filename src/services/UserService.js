@@ -72,6 +72,10 @@ class UserService {
         deviceID: UserService.userData.deviceID,
         deviceName: UserService.userData.deviceName,
         appType: UserService.userData.appType,
+        ratingCompleted: UserService.userData.ratingCompleted,
+        ratingShownCount: UserService.userData.ratingShownCount,
+        welcomeShown: UserService.userData.welcomeShown,
+        appFirstOpened: UserService.userData.appFirstOpened,
         appKey: appKey,
         updatedOn: UserService.userData.updatedOn
       }
